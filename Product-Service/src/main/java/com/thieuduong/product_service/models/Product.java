@@ -29,7 +29,7 @@ public class Product {
 
 	@Lob
 	@Column(columnDefinition = "MEDIUMBLOB")
-	private String image; // base64 nếu cần
+	private String image;
 
 	@Column(columnDefinition = "TEXT")
 	private String imageUrl;
