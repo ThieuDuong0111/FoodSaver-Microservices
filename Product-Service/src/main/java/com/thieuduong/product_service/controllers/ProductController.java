@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thieuduong.product_service.dto.ProductDTO;
 import com.thieuduong.product_service.services.ProductServiceImpl;
 
 @RestController
@@ -29,24 +30,21 @@ public class ProductController {
 //		return ResponseEntity.ok("Done");
 //	}
 //
-//	@GetMapping({ "/product/{id}" })
-//	public ResponseEntity<?> getProductDetail(@PathVariable int id) {
-//		ProductDTO productDTO = productServiceImpl
-//			.convertToDto(productServiceImpl.getProductById(id));
-//		if (productDTO == null) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		return ResponseEntity.ok(productDTO);
-//	}
+	@GetMapping({ "/product/{id}" })
+	public ResponseEntity<?> getProductDetail(@PathVariable("id") int integer) {
+		ProductDTO productDTO = productServiceImpl.convertToDto(productServiceImpl.getProductById(integer));
+		if (productDTO == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(productDTO);
+	}
+
 //
-//	@GetMapping({ "/products/by-category/{id}" })
-//	public ResponseEntity<?> getProductByCategoryId(
-//		@PathVariable int id) {
-//		List<ProductDTO> products = productServiceImpl.findByCategoryId(id);
-//		System.out.println(products.size());
-//		return ResponseEntity
-//			.ok(products);
-//	}
+	@GetMapping({ "/products/by-category/{id}" })
+	public ResponseEntity<?> getProductByCategoryId(@PathVariable("id") int integer) {
+		List<ProductDTO> products = productServiceImpl.findByCategoryId(integer);
+		return ResponseEntity.ok(products);
+	}
 //
 //	@GetMapping({ "/products/by-store/{id}" })
 //	public ResponseEntity<?> getProductByStoreId(

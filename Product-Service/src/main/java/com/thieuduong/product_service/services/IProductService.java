@@ -8,12 +8,15 @@ import com.thieuduong.product_service.models.Product;
 public interface IProductService {
 
 	ProductDTO convertToDto(Product product);
+
 //
 //	ProductDTO convertFromCartItemToProductDTO(CartItemDTO cartItemDTO);
 //
 	List<ProductDTO> getAllProducts();
+
 //
-//	Product getProductById(int id);
+	Product getProductById(int id);
+
 //
 //	List<ProductDTO> getTop20NewestProducts();
 //	
@@ -23,7 +26,7 @@ public interface IProductService {
 //
 //	void deleteProductById(int id);
 //
-//	List<ProductDTO> findByCategoryId(int categoryId);
+	List<ProductDTO> findByCategoryId(int categoryId);
 //	
 //	List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId);
 //	

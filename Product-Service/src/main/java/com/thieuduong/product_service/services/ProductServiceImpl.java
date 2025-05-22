@@ -69,17 +69,17 @@ public class ProductServiceImpl implements IProductService {
 		return products.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 //
-//	@Override
-//	public Product getProductById(int id) {
-//		Optional<Product> optionalProduct = productRepository.findById(id);
-//		Product product = null;
-//		if (optionalProduct.isPresent()) {
-//			product = optionalProduct.get();
-//			return product;
-//		} else {
-//			return null;
-//		}
-//	}
+	@Override
+	public Product getProductById(int id) {
+		Optional<Product> optionalProduct = productRepository.findById(id);
+		Product product = null;
+		if (optionalProduct.isPresent()) {
+			product = optionalProduct.get();
+			return product;
+		} else {
+			return null;
+		}
+	}
 //
 //	@Override
 //	public List<ProductDTO> getTop20NewestProducts() {
@@ -92,11 +92,11 @@ public class ProductServiceImpl implements IProductService {
 //				.collect(Collectors.toList());
 //	}
 //
-//	@Override
-//	public List<ProductDTO> findByCategoryId(int categoryId) {
-//		return productRepository.findByCategoryId(categoryId).stream().map(this::convertToDto)
-//				.collect(Collectors.toList());
-//	}
+	@Override
+	public List<ProductDTO> findByCategoryId(int categoryId) {
+		return productRepository.findByCategoryId(categoryId).stream().map(this::convertToDto)
+				.collect(Collectors.toList());
+	}
 //	
 //	@Override
 //	public List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId) {
