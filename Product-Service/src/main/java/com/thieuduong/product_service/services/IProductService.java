@@ -2,7 +2,7 @@ package com.thieuduong.product_service.services;
 
 import java.util.List;
 
-import com.thieuduong.product_service.dto.ProductDTO;
+import com.thieuduong.commons.dto.ProductDTO;
 import com.thieuduong.product_service.models.Product;
 
 public interface IProductService {

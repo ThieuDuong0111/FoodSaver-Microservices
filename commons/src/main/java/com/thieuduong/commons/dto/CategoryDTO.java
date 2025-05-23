@@ -1,4 +1,4 @@
-package com.thieuduong.category_service.dto;
+package com.thieuduong.commons.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 

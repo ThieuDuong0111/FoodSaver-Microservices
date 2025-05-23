@@ -2,10 +2,11 @@ package com.thieuduong.category_service.services;
 
 import java.util.List;
 
-import com.thieuduong.category_service.dto.CategoryDTO;
 import com.thieuduong.category_service.models.Category;
+import com.thieuduong.commons.dto.CategoryDTO;
 
 public interface ICategoryService {
+
 	CategoryDTO convertToDto(Category category);
 
 	Category convertToEntity(CategoryDTO categoryDTO);

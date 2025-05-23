@@ -1,4 +1,4 @@
-package com.thieuduong.product_service.dto;
+package com.thieuduong.commons.dto;
 
 import java.util.Date;
 
@@ -48,6 +48,10 @@ public class ProductDTO {
 	private Boolean isOutOfStock;
 
 	private int soldCount;
+
+	private Integer categoryId;
+
+	private CategoryDTO category;
 
 	public int getId() {
 		return id;
@@ -201,4 +205,19 @@ public class ProductDTO {
 		this.soldCount = soldCount;
 	}
 
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public CategoryDTO getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryDTO category) {
+		this.category = category;
+	}
 }

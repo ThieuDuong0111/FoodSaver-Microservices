@@ -6,10 +6,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.thieuduong.product_service.dto.ProductDTO;
+import com.thieuduong.commons.dto.ProductDTO;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
 
@@ -56,6 +55,7 @@ public class ProductServiceImpl implements IProductService {
 //		productDTO.setCreator(userService.convertToDto(product.getCreator()));
 		return productDTO;
 	}
+
 //
 //	@Override
 //	public ProductDTO convertFromCartItemToProductDTO(CartItemDTO cartItemDTO) {
@@ -68,6 +68,7 @@ public class ProductServiceImpl implements IProductService {
 		List<Product> products = productRepository.findAll();
 		return products.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
+
 //
 	@Override
 	public Product getProductById(int id) {
@@ -80,6 +81,7 @@ public class ProductServiceImpl implements IProductService {
 			return null;
 		}
 	}
+
 //
 //	@Override
 //	public List<ProductDTO> getTop20NewestProducts() {

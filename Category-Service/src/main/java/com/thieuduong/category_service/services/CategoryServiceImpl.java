@@ -8,9 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thieuduong.category_service.dto.CategoryDTO;
 import com.thieuduong.category_service.models.Category;
 import com.thieuduong.category_service.repositories.ICategoryRepository;
+import com.thieuduong.commons.dto.CategoryDTO;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -64,4 +64,5 @@ public class CategoryServiceImpl implements ICategoryService {
 		}
 
 	}
+
 }
