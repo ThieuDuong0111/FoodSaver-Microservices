@@ -53,6 +53,8 @@ public class ProductDTO {
 
 	private UnitDTO unit;
 
+	private UserDTO creator;
+
 	public int getId() {
 		return id;
 	}
@@ -219,6 +221,14 @@ public class ProductDTO {
 
 	public void setUnit(UnitDTO unit) {
 		this.unit = unit;
+	}
+
+	public UserDTO getCreator() {
+		return creator;
+	}
+
+	public void setCreator(UserDTO creator) {
+		this.creator = creator;
 	}
 
 }

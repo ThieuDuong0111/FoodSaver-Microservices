@@ -19,8 +19,8 @@
 		<module>Product-Service</module>
 		<module>Category-Service</module>
 		<module>Unit-Service</module>
+		<module>User-Service</module>
 		<module>commons</module>
-		<module>commons1</module>
 	</modules>
 
 	<dependencyManagement>

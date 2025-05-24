@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.thieuduong.commons.clients.ICategoryClient;
 import com.thieuduong.commons.clients.IUnitClient;
+import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.CategoryDTO;
 import com.thieuduong.commons.dto.ProductDTO;
 import com.thieuduong.commons.dto.UnitDTO;
+import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
 
@@ -24,6 +26,9 @@ public class ProductServiceImpl implements IProductService {
 
 	@Autowired
 	private IUnitClient unitClient;
+
+	@Autowired
+	private IUserClient userClient;
 
 	@Autowired
 	private IProductRepository productRepository;
@@ -99,8 +104,15 @@ public class ProductServiceImpl implements IProductService {
 
 			if (unitDTO == null)
 				return null;
-			
+
 			productDTO.setUnit(unitDTO);
+
+			UserDTO userDTO = userClient.getUserById(product.getCreatorId());
+
+			if (userDTO == null)
+				return null;
+
+			productDTO.setCreator(userDTO);
 			return productDTO;
 		} else {
 			return null;
