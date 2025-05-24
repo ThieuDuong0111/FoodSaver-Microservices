@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thieuduong.unit_service.dto.UnitDTO;
+import com.thieuduong.commons.dto.UnitDTO;
 import com.thieuduong.unit_service.services.UnitServiceImpl;
-
 
 @RestController
 @RequestMapping("/api")

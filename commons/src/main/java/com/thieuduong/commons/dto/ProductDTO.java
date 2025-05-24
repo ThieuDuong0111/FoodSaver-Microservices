@@ -49,9 +49,9 @@ public class ProductDTO {
 
 	private int soldCount;
 
-	private Integer categoryId;
-
 	private CategoryDTO category;
+
+	private UnitDTO unit;
 
 	public int getId() {
 		return id;
@@ -205,14 +205,6 @@ public class ProductDTO {
 		this.soldCount = soldCount;
 	}
 
-	public Integer getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
-	}
-
 	public CategoryDTO getCategory() {
 		return category;
 	}
@@ -220,4 +212,13 @@ public class ProductDTO {
 	public void setCategory(CategoryDTO category) {
 		this.category = category;
 	}
+
+	public UnitDTO getUnit() {
+		return unit;
+	}
+
+	public void setUnit(UnitDTO unit) {
+		this.unit = unit;
+	}
+
 }

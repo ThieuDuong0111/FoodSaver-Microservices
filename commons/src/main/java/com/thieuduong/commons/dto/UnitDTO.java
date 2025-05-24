@@ -1,4 +1,4 @@
-package com.thieuduong.unit_service.dto;
+package com.thieuduong.commons.dto;
 
 public class UnitDTO {
 	private int id;

@@ -1,6 +1,6 @@
 package com.thieuduong.unit_service.services;
 
-import com.thieuduong.unit_service.dto.UnitDTO;
+import com.thieuduong.commons.dto.UnitDTO;
 import com.thieuduong.unit_service.models.Unit;
 
 public interface IUnitService {

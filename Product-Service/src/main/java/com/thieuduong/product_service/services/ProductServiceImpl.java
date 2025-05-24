@@ -8,12 +8,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thieuduong.commons.clients.ICategoryClient;
+import com.thieuduong.commons.clients.IUnitClient;
+import com.thieuduong.commons.dto.CategoryDTO;
 import com.thieuduong.commons.dto.ProductDTO;
+import com.thieuduong.commons.dto.UnitDTO;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
 
 @Service
 public class ProductServiceImpl implements IProductService {
+
+	@Autowired
+	private ICategoryClient categoryClient;
+
+	@Autowired
+	private IUnitClient unitClient;
 
 	@Autowired
 	private IProductRepository productRepository;
@@ -71,12 +81,27 @@ public class ProductServiceImpl implements IProductService {
 
 //
 	@Override
-	public Product getProductById(int id) {
+	public ProductDTO getProductById(int id) {
 		Optional<Product> optionalProduct = productRepository.findById(id);
 		Product product = null;
 		if (optionalProduct.isPresent()) {
 			product = optionalProduct.get();
-			return product;
+
+			ProductDTO productDTO = convertToDto(product);
+
+			CategoryDTO categoryDTO = categoryClient.getCategoryById(product.getCategoryId());
+
+			if (categoryDTO == null)
+				return null;
+
+			productDTO.setCategory(categoryDTO);
+			UnitDTO unitDTO = unitClient.getUnitById(product.getUnitId());
+
+			if (unitDTO == null)
+				return null;
+			
+			productDTO.setUnit(unitDTO);
+			return productDTO;
 		} else {
 			return null;
 		}

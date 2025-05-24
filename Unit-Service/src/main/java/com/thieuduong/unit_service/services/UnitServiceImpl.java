@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thieuduong.unit_service.dto.UnitDTO;
+import com.thieuduong.commons.dto.UnitDTO;
 import com.thieuduong.unit_service.models.Unit;
 import com.thieuduong.unit_service.repositories.IUnitRepository;
 

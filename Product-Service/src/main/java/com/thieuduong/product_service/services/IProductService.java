@@ -15,7 +15,7 @@ public interface IProductService {
 	List<ProductDTO> getAllProducts();
 
 //
-	Product getProductById(int id);
+	ProductDTO getProductById(int id);
 
 //
 //	List<ProductDTO> getTop20NewestProducts();
