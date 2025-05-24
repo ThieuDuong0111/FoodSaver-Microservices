@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>API-Gateway</module>
+		<module>Banner-Service</module>
 		<module>Product-Service</module>
 		<module>Category-Service</module>
 		<module>Unit-Service</module>
