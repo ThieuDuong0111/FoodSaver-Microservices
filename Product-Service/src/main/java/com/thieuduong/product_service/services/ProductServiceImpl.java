@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.ProductDTO;
 import com.thieuduong.commons.dto.UserDTO;
+import com.thieuduong.commons.utils.ParseUtils;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
 
@@ -22,25 +23,15 @@ public class ProductServiceImpl implements IProductService {
 
 	@Autowired
 	private IProductRepository productRepository;
-//
-//	@Autowired
-//	private IFeedBackRepository feedBackRepository;
-//
-//	@Autowired
-//	private ICategoryService categoryService;
-//
-//	@Autowired
-//	private IUserService userService;
-//
+
 	@Autowired
 	private ModelMapper modelMapper;
 
-//
 	@Override
 	public ProductDTO convertToDto(Product product) {
 		ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-//		productDTO.setIsOutOfStock(product.getQuantity() < 1);
-//		productDTO.setIsExpired(ParseUtils.checkIsExpired(product.getExpiredDate()));
+		productDTO.setIsOutOfStock(product.getQuantity() < 1);
+		productDTO.setIsExpired(ParseUtils.checkIsExpired(product.getExpiredDate()));
 //		// Rating counts
 //		productDTO.setRatingsCount(feedBackRepository.countRatingsByProductId(product.getId()));
 //		// Rating 1
@@ -56,8 +47,7 @@ public class ProductServiceImpl implements IProductService {
 //		// -------
 //		productDTO.setCommentsCount(feedBackRepository.countCommentsByProductId(product.getId()));
 //		productDTO.setRating(calculateRating(product.getId()));
-//		productDTO.setCategory(categoryService.convertToDto(product.getCategory()));
-//		productDTO.setCreator(userService.convertToDto(product.getCreator()));
+		setCreatorToProduct(productDTO, product.getCreatorId());
 		return productDTO;
 	}
 
@@ -83,31 +73,24 @@ public class ProductServiceImpl implements IProductService {
 			product = optionalProduct.get();
 
 			ProductDTO productDTO = convertToDto(product);
-
-			UserDTO userDTO = userClient.getUserById(product.getCreatorId());
-
-			if (userDTO == null)
-				return null;
-
-			productDTO.setCreator(userDTO);
+			setCreatorToProduct(productDTO, product.getCreatorId());
 			return productDTO;
 		} else {
 			return null;
 		}
 	}
 
-//
-//	@Override
-//	public List<ProductDTO> getTop20NewestProducts() {
-//		return productRepository.getTop20Products().stream().map(this::convertToDto).collect(Collectors.toList());
-//	}
-//
-//	@Override
-//	public List<ProductDTO> getTop5MostPurchaseProducts() {
-//		return productRepository.getTop5MostPurchaseProducts().stream().map(this::convertToDto)
-//				.collect(Collectors.toList());
-//	}
-//
+	@Override
+	public List<ProductDTO> getTop20NewestProducts() {
+		return productRepository.getTop20Products().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ProductDTO> getTop5MostPurchaseProducts() {
+		return productRepository.getTop5MostPurchaseProducts().stream().map(this::convertToDto)
+				.collect(Collectors.toList());
+	}
+
 	@Override
 	public List<ProductDTO> findByCategoryId(int categoryId) {
 		return productRepository.findByCategoryId(categoryId).stream().map(this::convertToDto)
@@ -131,23 +114,23 @@ public class ProductServiceImpl implements IProductService {
 //		Specification<Product> specification = ProductSpecification.searchByKeyword(name);
 //		return productRepository.findAll(specification).stream().map(this::convertToDto).collect(Collectors.toList());
 //	}
-//
-//	@Override
-//	public void deleteProductById(int id) {
-//		this.productRepository.deleteById(id);
-//	}
-//
-//	@Override
-//	public Product getProductByImageUrl(String url) {
-//		Optional<Product> optionalProduct = productRepository.findByImageUrl(url);
-//		Product product = null;
-//		if (optionalProduct.isPresent()) {
-//			product = optionalProduct.get();
-//			return product;
-//		} else {
-//			return null;
-//		}
-//	}
+
+	@Override
+	public void deleteProductById(int id) {
+		this.productRepository.deleteById(id);
+	}
+
+	@Override
+	public Product getProductByImageUrl(String url) {
+		Optional<Product> optionalProduct = productRepository.findByImageUrl(url);
+		Product product = null;
+		if (optionalProduct.isPresent()) {
+			product = optionalProduct.get();
+			return product;
+		} else {
+			return null;
+		}
+	}
 //
 //	@Override
 //	public Double calculateRating(int productId) {
@@ -161,5 +144,11 @@ public class ProductServiceImpl implements IProductService {
 //	public List<Product> testGetAll() {
 //		return productRepository.testGetAll();
 //	}
+
+	@Override
+	public void setCreatorToProduct(ProductDTO productDTO, int userId) {
+		UserDTO userDTO = userClient.getUserById(userId);
+		productDTO.setCreator(userDTO);
+	}
 
 }

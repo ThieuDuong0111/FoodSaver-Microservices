@@ -17,14 +17,16 @@ public interface IProductService {
 //
 	ProductDTO getProductById(int id);
 
+	void setCreatorToProduct(ProductDTO productDTO, int userId);
+
 //
-//	List<ProductDTO> getTop20NewestProducts();
+	List<ProductDTO> getTop20NewestProducts();
 //	
-//	List<ProductDTO> getTop5MostPurchaseProducts();
+	List<ProductDTO> getTop5MostPurchaseProducts();
 //
-//	Product getProductByImageUrl(String url);
+	Product getProductByImageUrl(String url);
 //
-//	void deleteProductById(int id);
+	void deleteProductById(int id);
 //
 	List<ProductDTO> findByCategoryId(int categoryId);
 //	
