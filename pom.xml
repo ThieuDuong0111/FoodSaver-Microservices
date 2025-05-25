@@ -21,6 +21,7 @@
 		<module>Category-Service</module>
 		<module>Unit-Service</module>
 		<module>User-Service</module>
+		<module>Feedback-Service</module>
 		<module>commons</module>
 	</modules>
 
