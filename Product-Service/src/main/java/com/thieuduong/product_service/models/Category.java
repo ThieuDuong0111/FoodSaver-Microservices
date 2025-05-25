@@ -1,4 +1,6 @@
-package com.thieuduong.category_service.models;
+package com.thieuduong.product_service.models;
+
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -8,6 +10,9 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+
+	@OneToMany(mappedBy = "category")
+	private List<Product> products;
 
 	@Column(length = 100)
 	private String name;
@@ -31,6 +36,14 @@ public class Category {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 	public String getName() {

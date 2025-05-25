@@ -1,4 +1,4 @@
-package com.thieuduong.unit_service.services;
+package com.thieuduong.product_service.services;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thieuduong.commons.dto.UnitDTO;
-import com.thieuduong.unit_service.models.Unit;
-import com.thieuduong.unit_service.repositories.IUnitRepository;
+import com.thieuduong.product_service.models.Unit;
+import com.thieuduong.product_service.repositories.IUnitRepository;
 
 @Service
 public class UnitServiceImpl implements IUnitService {

@@ -1,4 +1,4 @@
-package com.thieuduong.category_service.services;
+package com.thieuduong.product_service.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thieuduong.category_service.models.Category;
-import com.thieuduong.category_service.repositories.ICategoryRepository;
+import com.thieuduong.product_service.models.Category;
+import com.thieuduong.product_service.repositories.ICategoryRepository;
 import com.thieuduong.commons.dto.CategoryDTO;
 
 @Service

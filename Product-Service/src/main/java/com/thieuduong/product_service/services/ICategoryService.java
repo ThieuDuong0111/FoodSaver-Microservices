@@ -1,8 +1,8 @@
-package com.thieuduong.category_service.services;
+package com.thieuduong.product_service.services;
 
 import java.util.List;
 
-import com.thieuduong.category_service.models.Category;
+import com.thieuduong.product_service.models.Category;
 import com.thieuduong.commons.dto.CategoryDTO;
 
 public interface ICategoryService {

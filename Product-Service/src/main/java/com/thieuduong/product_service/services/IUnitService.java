@@ -1,7 +1,7 @@
-package com.thieuduong.unit_service.services;
+package com.thieuduong.product_service.services;
 
 import com.thieuduong.commons.dto.UnitDTO;
-import com.thieuduong.unit_service.models.Unit;
+import com.thieuduong.product_service.models.Unit;
 
 public interface IUnitService {
 	UnitDTO convertToDto(Unit Unit);

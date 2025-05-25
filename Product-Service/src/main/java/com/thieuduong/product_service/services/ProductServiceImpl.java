@@ -8,24 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thieuduong.commons.clients.ICategoryClient;
-import com.thieuduong.commons.clients.IUnitClient;
 import com.thieuduong.commons.clients.IUserClient;
-import com.thieuduong.commons.dto.CategoryDTO;
 import com.thieuduong.commons.dto.ProductDTO;
-import com.thieuduong.commons.dto.UnitDTO;
 import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
 
 @Service
 public class ProductServiceImpl implements IProductService {
-
-	@Autowired
-	private ICategoryClient categoryClient;
-
-	@Autowired
-	private IUnitClient unitClient;
 
 	@Autowired
 	private IUserClient userClient;
@@ -93,19 +83,6 @@ public class ProductServiceImpl implements IProductService {
 			product = optionalProduct.get();
 
 			ProductDTO productDTO = convertToDto(product);
-
-			CategoryDTO categoryDTO = categoryClient.getCategoryById(product.getCategoryId());
-
-			if (categoryDTO == null)
-				return null;
-
-			productDTO.setCategory(categoryDTO);
-			UnitDTO unitDTO = unitClient.getUnitById(product.getUnitId());
-
-			if (unitDTO == null)
-				return null;
-
-			productDTO.setUnit(unitDTO);
 
 			UserDTO userDTO = userClient.getUserById(product.getCreatorId());
 

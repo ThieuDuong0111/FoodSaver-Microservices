@@ -1,6 +1,6 @@
-package com.thieuduong.category_service.repositories;
+package com.thieuduong.product_service.repositories;
 
-import com.thieuduong.category_service.models.Category;
+import com.thieuduong.product_service.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

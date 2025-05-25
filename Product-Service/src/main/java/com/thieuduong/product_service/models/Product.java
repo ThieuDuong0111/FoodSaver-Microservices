@@ -7,7 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,9 +19,15 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private Integer categoryId; // Thay vì @ManyToOne Category
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
+
 	private Integer creatorId; // Thay vì @ManyToOne MyUser
-	private Integer unitId; // Thay vì @ManyToOne Unit
+
+	@ManyToOne
+	@JoinColumn(name = "unit_id")
+	private Unit unit;
 
 	@Column(length = 100)
 	private String name;
@@ -53,12 +61,12 @@ public class Product {
 		this.id = id;
 	}
 
-	public Integer getCategoryId() {
-		return categoryId;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public Integer getCreatorId() {
@@ -69,12 +77,12 @@ public class Product {
 		this.creatorId = creatorId;
 	}
 
-	public Integer getUnitId() {
-		return unitId;
+	public Unit getUnit() {
+		return unit;
 	}
 
-	public void setUnitId(Integer unitId) {
-		this.unitId = unitId;
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 	public String getName() {
