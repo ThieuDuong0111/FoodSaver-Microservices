@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.thieuduong.commons.clients.IFeedbackClient;
@@ -16,6 +17,7 @@ import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.commons.utils.ParseUtils;
 import com.thieuduong.product_service.models.Product;
 import com.thieuduong.product_service.repositories.IProductRepository;
+import com.thieuduong.product_service.utils.ProductSpecification;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -102,24 +104,24 @@ public class ProductServiceImpl implements IProductService {
 		return productRepository.findByCategoryId(categoryId).stream().map(this::convertToDto)
 				.collect(Collectors.toList());
 	}
-//	
-//	@Override
-//	public List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId) {
-//		return productRepository.findByCategoryIdWithNativeQuery(categoryId).stream().map(this::convertToDto)
-//				.collect(Collectors.toList());
-//	}
-//
-//	@Override
-//	public List<ProductDTO> findByStoreId(int storeId) {
-//		return productRepository.findByCreatorId(storeId).stream().map(this::convertToDto).collect(Collectors.toList());
-//	}
-//
-//	@Override
-//	public List<ProductDTO> searchByName(String name) {
-//		System.out.println(name);
-//		Specification<Product> specification = ProductSpecification.searchByKeyword(name);
-//		return productRepository.findAll(specification).stream().map(this::convertToDto).collect(Collectors.toList());
-//	}
+
+	@Override
+	public List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId) {
+		return productRepository.findByCategoryIdWithNativeQuery(categoryId).stream().map(this::convertToDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ProductDTO> findByStoreId(int storeId) {
+		return productRepository.findByCreatorId(storeId).stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ProductDTO> searchByName(String name) {
+		System.out.println(name);
+		Specification<Product> specification = ProductSpecification.searchByKeyword(name);
+		return productRepository.findAll(specification).stream().map(this::convertToDto).collect(Collectors.toList());
+	}
 
 	@Override
 	public void deleteProductById(int id) {

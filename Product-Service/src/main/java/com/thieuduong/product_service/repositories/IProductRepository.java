@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.thieuduong.product_service.models.Product;
@@ -22,12 +23,12 @@ public interface IProductRepository extends JpaRepository<Product, Integer>, Jpa
 	Optional<Product> findByImageUrl(String imageUrl);
 
 	List<Product> findByCategoryId(int categoryId);
-//
-//	@Query(value = "SELECT * FROM Product p JOIN Category c ON p.category_id = c.id JOIN User u ON p.creator_id = u.id JOIN Unit un ON p.unit_id = un.id WHERE c.id = :category_id", nativeQuery = true)
-//	List<Product> findByCategoryIdWithNativeQuery(@Param("category_id") int categoryId);
-//
-//	List<Product> findByCreatorId(int creatorId);
-//
+
+	@Query(value = "SELECT * FROM Product p JOIN Category c ON p.category_id = c.id JOIN User u ON p.creator_id = u.id JOIN Unit un ON p.unit_id = un.id WHERE c.id = :category_id", nativeQuery = true)
+	List<Product> findByCategoryIdWithNativeQuery(@Param("category_id") int categoryId);
+
+	List<Product> findByCreatorId(int creatorId);
+
 //	@Query(value = "SELECT * FROM Product", nativeQuery = true)
 //	List<Product> testGetAll();
 }

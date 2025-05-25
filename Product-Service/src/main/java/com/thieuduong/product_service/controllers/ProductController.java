@@ -40,17 +40,20 @@ public class ProductController {
 		return ResponseEntity.ok(productDTO);
 	}
 
-//
 	@GetMapping({ "/products/by-category/{id}" })
 	public ResponseEntity<?> getProductByCategoryId(@PathVariable("id") int integer) {
 		List<ProductDTO> products = productServiceImpl.findByCategoryId(integer);
 		return ResponseEntity.ok(products);
 	}
-//
-//	@GetMapping({ "/products/by-store/{id}" })
-//	public ResponseEntity<?> getProductByStoreId(
-//		@PathVariable int id) {
-//		return ResponseEntity
-//			.ok(productServiceImpl.findByStoreId(id));
+
+	@GetMapping({ "/products/by-store/{id}" })
+	public ResponseEntity<?> getProductByStoreId(@PathVariable int id) {
+		return ResponseEntity.ok(productServiceImpl.findByStoreId(id));
+	}
+
+	// Microservices
+//	@GetMapping({ "/products/get-10-newest-store" })
+//	public ResponseEntity<?> get10NewestStore() {
+//		return ResponseEntity.ok(productServiceImpl.get);
 //	}
 }

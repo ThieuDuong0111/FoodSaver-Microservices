@@ -8,6 +8,12 @@ import jakarta.validation.constraints.NotEmpty;
 public class ProductDTO {
 	private int id;
 
+	private CategoryDTO category;
+
+	private UserDTO creator;
+
+	private UnitDTO unit;
+
 	@NotEmpty(message = "Name không được bỏ trống.")
 	private String name;
 
@@ -48,12 +54,6 @@ public class ProductDTO {
 	private Boolean isOutOfStock;
 
 	private int soldCount;
-
-	private CategoryDTO category;
-
-	private UnitDTO unit;
-
-	private UserDTO creator;
 
 	public int getId() {
 		return id;

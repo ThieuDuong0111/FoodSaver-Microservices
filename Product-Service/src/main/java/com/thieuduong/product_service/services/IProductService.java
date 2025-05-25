@@ -30,11 +30,11 @@ public interface IProductService {
 //
 	List<ProductDTO> findByCategoryId(int categoryId);
 //	
-//	List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId);
-//	
-//	List<ProductDTO> findByStoreId(int storeId);
-//
-//	List<ProductDTO> searchByName(String name);
+	List<ProductDTO> findByCategoryIdWithNativeQuery(int categoryId);
+
+	List<ProductDTO> findByStoreId(int storeId);
+
+	List<ProductDTO> searchByName(String name);
 //	
 //	List<Product> testGetAll();
 //	
