@@ -118,7 +118,6 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public List<ProductDTO> searchByName(String name) {
-		System.out.println(name);
 		Specification<Product> specification = ProductSpecification.searchByKeyword(name);
 		return productRepository.findAll(specification).stream().map(this::convertToDto).collect(Collectors.toList());
 	}
