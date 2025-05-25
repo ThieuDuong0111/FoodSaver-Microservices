@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -17,7 +19,9 @@ public class MyUser {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private Integer roleId;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
 	@Column(length = 100, unique = true)
 	private String name;
@@ -67,12 +71,12 @@ public class MyUser {
 		this.id = id;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public String getName() {
