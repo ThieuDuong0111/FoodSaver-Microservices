@@ -2,10 +2,8 @@ package com.thieuduong.order_service.services;
 
 import java.util.List;
 
-import com.funix.foodsaverAPI.dto.OrderDTO;
-import com.funix.foodsaverAPI.models.Order;
-
-import jakarta.servlet.http.HttpServletRequest;
+import com.thieuduong.commons.dto.OrderDTO;
+import com.thieuduong.order_service.models.Order;
 
 public interface IOrderService {
 
@@ -13,7 +11,7 @@ public interface IOrderService {
 
 	Order convertToEntity(OrderDTO orderDTO);
 
-	List<OrderDTO> getOrderByUserId(HttpServletRequest request);
+//	List<OrderDTO> getOrderByUserId(HttpServletRequest request);
 
 	OrderDTO getOrderById(int id);
 }

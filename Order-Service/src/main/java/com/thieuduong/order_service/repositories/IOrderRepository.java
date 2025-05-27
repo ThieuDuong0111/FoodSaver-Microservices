@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.funix.foodsaverAPI.models.Order;
+import com.thieuduong.order_service.models.Order;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<Order, Integer> {
