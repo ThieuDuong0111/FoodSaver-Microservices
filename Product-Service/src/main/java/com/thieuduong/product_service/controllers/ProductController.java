@@ -24,19 +24,12 @@ public class ProductController {
 		return ResponseEntity.ok(productServiceImpl.getAllProducts());
 	}
 
-//	@GetMapping({ "/products/test_getall" })
-//	public ResponseEntity<?> testGetAllProducts() {
-//		productServiceImpl.testGetAll();
-//		return ResponseEntity.ok("Done");
-//	}
-//
 	@GetMapping({ "/product/{id}" })
 	public ResponseEntity<?> getProductDetail(@PathVariable("id") int integer) {
 		ProductDTO productDTO = productServiceImpl.getProductById(integer);
 		if (productDTO == null) {
 			return ResponseEntity.notFound().build();
 		}
-
 		return ResponseEntity.ok(productDTO);
 	}
 
@@ -51,9 +44,4 @@ public class ProductController {
 		return ResponseEntity.ok(productServiceImpl.findByStoreId(id));
 	}
 
-	// Microservices
-//	@GetMapping({ "/products/get-10-newest-store" })
-//	public ResponseEntity<?> get10NewestStore() {
-//		return ResponseEntity.ok(productServiceImpl.get);
-//	}
 }

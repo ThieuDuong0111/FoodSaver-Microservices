@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thieuduong.commons.clients.IUserClient;
+import com.thieuduong.commons.dto.AddAnswerDTO;
 import com.thieuduong.commons.dto.AnswerDTO;
 import com.thieuduong.feedback_service.models.Answer;
+import com.thieuduong.feedback_service.models.Feedback;
 
 @Service
 public class AnswerServiceImpl implements IAnswerService {
@@ -30,8 +32,8 @@ public class AnswerServiceImpl implements IAnswerService {
 //
 //		Feedback feedBack = new Feedback();
 //		feedBack.setId(addAnswerDTO.getFeedBackId());
-//		MyUser user = new MyUser();
-//		user.setId(addAnswerDTO.getUserId());
+////		MyUser user = new MyUser();
+//		feedBack.set(addAnswerDTO.getUserId());
 //		Answer answer = new Answer();
 //		answer.setFeedback(feedBack);
 //		answer.setUserAnswer(user);

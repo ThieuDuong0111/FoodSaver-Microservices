@@ -37,12 +37,9 @@ public class Feedback {
 		super();
 	}
 
-	public Feedback(Integer id, Integer userId, List<Answer> answers, Integer productId, String comment, int rating,
-			Date publishedDate) {
+	public Feedback(Integer userId, Integer productId, String comment, int rating, Date publishedDate) {
 		super();
-		this.id = id;
 		this.userId = userId;
-		this.answers = answers;
 		this.productId = productId;
 		this.comment = comment;
 		this.rating = rating;

@@ -1,5 +1,6 @@
 package com.thieuduong.feedback_service.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.thieuduong.commons.clients.IProductClient;
 import com.thieuduong.commons.clients.IUserClient;
+import com.thieuduong.commons.dto.AddFeedbackDTO;
 import com.thieuduong.commons.dto.FeedbackDTO;
 import com.thieuduong.feedback_service.models.Feedback;
 import com.thieuduong.feedback_service.repositories.IFeedbackRepository;
@@ -45,16 +47,15 @@ public class FeedbackServiceImpl implements IFeedbackService {
 		return FeedbackDTO;
 	}
 
-//	@Override
-//	public void addFeedback(AddFeedbackDTO addFeedbackDTO) {
-//		if (addFeedbackDTO.getRating() > 5) {
-//			addFeedbackDTO.setRating(5);
-//		}
-//		Feedback feed = new Feedback(userRepository.findById(addFeedbackDTO.getUserId()).get(),
-//				productRepository.findById(addFeedbackDTO.getProductId()).get(), addFeedbackDTO.getComment(),
-//				addFeedbackDTO.getRating(), new Date());
-//		feedbackRepository.save(feed);
-//	}
+	@Override
+	public void addFeedback(AddFeedbackDTO addFeedbackDTO) {
+		if (addFeedbackDTO.getRating() > 5) {
+			addFeedbackDTO.setRating(5);
+		}
+		Feedback feed = new Feedback(addFeedbackDTO.getUserId(), addFeedbackDTO.getProductId(),
+				addFeedbackDTO.getComment(), addFeedbackDTO.getRating(), new Date());
+		feedbackRepository.save(feed);
+	}
 
 	@Override
 	public List<FeedbackDTO> getFeedbacksByProductId(int productId) {
