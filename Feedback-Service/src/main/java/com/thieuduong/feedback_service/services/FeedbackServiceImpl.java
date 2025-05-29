@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thieuduong.commons.clients.IProductClient;
+import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.FeedbackDTO;
 import com.thieuduong.feedback_service.models.Feedback;
 import com.thieuduong.feedback_service.repositories.IFeedbackRepository;
@@ -15,6 +17,15 @@ public class FeedbackServiceImpl implements IFeedbackService {
 
 	@Autowired
 	private IFeedbackRepository feedbackRepository;
+
+	@Autowired
+	private IProductClient productClient;
+
+	@Autowired
+	private IUserClient userClient;
+
+	@Autowired
+	private AnswerServiceImpl answerServiceImpl;
 
 //	@Autowired
 //	private IProductRepository productRepository;
@@ -28,7 +39,9 @@ public class FeedbackServiceImpl implements IFeedbackService {
 	@Override
 	public FeedbackDTO convertToDto(Feedback Feedback) {
 		FeedbackDTO FeedbackDTO = modelMapper.map(Feedback, FeedbackDTO.class);
-		FeedbackDTO.getProductFeedBacks().setRating(0.0);
+		FeedbackDTO.setUserFeedBacks(userClient.getStoreById(Feedback.getUserId()));
+		FeedbackDTO.setProductFeedBacks(productClient.getProductDetail(Feedback.getProductId()));
+		FeedbackDTO.setAnswers(Feedback.getAnswers().stream().map(answerServiceImpl::convertToDto).toList());
 		return FeedbackDTO;
 	}
 
@@ -47,7 +60,7 @@ public class FeedbackServiceImpl implements IFeedbackService {
 	public List<FeedbackDTO> getFeedbacksByProductId(int productId) {
 		return feedbackRepository.findByProductId(productId).stream().map(this::convertToDto).toList();
 	}
-	
+
 	@Override
 	public Double calculateRating(int productId) {
 		double number = feedbackRepository.findAverageRatingByProductId(productId) == null ? 5.0

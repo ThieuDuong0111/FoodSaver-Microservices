@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thieuduong.commons.dto.FeedbackInformationDTO;
 import com.thieuduong.feedback_service.repositories.IFeedbackRepository;
+import com.thieuduong.feedback_service.services.AnswerServiceImpl;
 import com.thieuduong.feedback_service.services.FeedbackServiceImpl;
 
 @RestController
@@ -22,8 +23,8 @@ public class FeedbackController {
 	@Autowired
 	private IFeedbackRepository feedbackRepository;
 
-//	@Autowired
-//	private AnswerServiceImpl answerServiceImpl;
+	@Autowired
+	private AnswerServiceImpl answerServiceImpl;
 
 //	@PostMapping("/add-feedback")
 //	public ResponseEntity<?> addFeedback(@RequestBody AddFeedbackDTO addFeedbackDTO) {
@@ -31,10 +32,10 @@ public class FeedbackController {
 //		return ResponseEntity.status(HttpStatus.OK).body(addFeedbackDTO);
 //	}
 //
-//	@GetMapping("/get-Feedbacks/{id}")
-//	public ResponseEntity<?> getFeedbacksByProductId(@PathVariable int id) {
-//		return ResponseEntity.status(HttpStatus.OK).body(feedbackServiceImpl.getFeedbacksByProductId(id));
-//	}
+	@GetMapping("/get-feedbacks/{id}")
+	public ResponseEntity<?> getFeedbacksByProductId(@PathVariable int id) {
+		return ResponseEntity.status(HttpStatus.OK).body(feedbackServiceImpl.getFeedbacksByProductId(id));
+	}
 //
 //	@PostMapping("/add-answer")
 //	public ResponseEntity<?> addAnswer(@RequestBody AddAnswerDTO addAnswerDTO) {

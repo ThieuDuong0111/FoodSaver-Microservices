@@ -2,6 +2,7 @@ package com.thieuduong.feedback_service.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +21,7 @@ public class Feedback {
 
 	private Integer userId;
 
-	@OneToMany(mappedBy = "feedback")
+	@OneToMany(mappedBy = "feedback", fetch = FetchType.EAGER)
 	private List<Answer> answers;
 
 	private Integer productId;
@@ -31,6 +32,22 @@ public class Feedback {
 	private int rating;
 
 	private Date publishedDate;
+
+	public Feedback() {
+		super();
+	}
+
+	public Feedback(Integer id, Integer userId, List<Answer> answers, Integer productId, String comment, int rating,
+			Date publishedDate) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.answers = answers;
+		this.productId = productId;
+		this.comment = comment;
+		this.rating = rating;
+		this.publishedDate = publishedDate;
+	}
 
 	public Integer getId() {
 		return id;

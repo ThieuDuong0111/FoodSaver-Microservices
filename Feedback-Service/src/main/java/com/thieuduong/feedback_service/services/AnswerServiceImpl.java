@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.AnswerDTO;
 import com.thieuduong.feedback_service.models.Answer;
 
@@ -13,9 +14,15 @@ public class AnswerServiceImpl implements IAnswerService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Autowired
+	private IUserClient userClient;
+
 	@Override
 	public AnswerDTO convertToDto(Answer Answer) {
-		return modelMapper.map(Answer, AnswerDTO.class);
+		AnswerDTO AnswerDTO = modelMapper.map(Answer, AnswerDTO.class);
+		System.out.println(Answer.getUserId());
+		AnswerDTO.setUserAnswer(userClient.getStoreById(Answer.getUserId()));
+		return AnswerDTO;
 	}
 
 //	@Override
