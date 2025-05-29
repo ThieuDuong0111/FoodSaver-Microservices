@@ -3,12 +3,14 @@ package com.thieuduong.user_service.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.user_service.services.UserServiceImpl;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api")
@@ -17,20 +19,15 @@ public class UserController {
 	@Autowired
 	private UserServiceImpl userServiceImpl;
 
-	@GetMapping({ "/user/{id}" })
-	public ResponseEntity<?> getUserDetail(@PathVariable int id) {
-		UserDTO UserDTO = userServiceImpl.convertToDto(userServiceImpl.getUserById(id));
-		if (UserDTO == null) {
-			return ResponseEntity.notFound().build();
+	@GetMapping("/user/user-info")
+	public Mono<ResponseEntity<UserDTO>> getUserInfo(ServerWebExchange exchange) {
+		String name = exchange.getRequest().getHeaders().getFirst("name");
+		if (name == null || name.isEmpty()) {
+			return Mono.just(ResponseEntity.badRequest().build());
 		}
-		return ResponseEntity.ok(UserDTO);
+		return userServiceImpl.getUserByName(name).map(userServiceImpl::convertToDto)
+				.map(userDTO -> ResponseEntity.ok(userDTO)).defaultIfEmpty(ResponseEntity.notFound().build());
 	}
-
-//	@GetMapping("/user-info")
-//	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
-//		MyUser user = userServiceImpl.getUserByToken(request);
-//		return ResponseEntity.ok(userServiceImpl.convertToDto(user));
-//	}
 //
 //	@PutMapping(path = "/update-info", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 //	public ResponseEntity<?> updateUserInfo(HttpServletRequest request, @ModelAttribute UserDTO userDTO) {

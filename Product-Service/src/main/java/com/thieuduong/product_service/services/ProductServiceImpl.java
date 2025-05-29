@@ -148,7 +148,7 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public void setCreatorToProduct(ProductDTO productDTO, int userId) {
-		UserDTO userDTO = userClient.getUserById(userId);
+		UserDTO userDTO = userClient.getStoreById(userId);
 		productDTO.setCreator(userDTO);
 	}
 

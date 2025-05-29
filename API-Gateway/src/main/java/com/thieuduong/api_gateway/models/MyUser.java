@@ -1,4 +1,4 @@
-package com.thieuduong.user_service.models;
+package com.thieuduong.api_gateway.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

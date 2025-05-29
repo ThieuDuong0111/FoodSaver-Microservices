@@ -1,31 +1,27 @@
-//package com.thieuduong.api_gateway.services;
-//
-//import java.util.Optional;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.stereotype.Service;
-//
-//import com.thieuduong.user_service.models.MyUser;
-//import com.thieuduong.user_service.repositories.IUserRepository;
-//
-//@Service
-//public class AuthServiceImpl implements UserDetailsService {
-//
-//	@Autowired
-//	private IUserRepository userRepository;
-//
-//	@Override
-//	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-//
-//		Optional<MyUser> user = userRepository.findByName(name);
-//		if (user.isPresent()) {
-//			return User.withUsername(user.get().getName()).password(user.get().getPassword())
-//					.roles(user.get().getRole().getName()).build();
-//		}
-//		throw new UsernameNotFoundException(name);
-//	}
-//}
+package com.thieuduong.api_gateway.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import com.thieuduong.api_gateway.repositories.IRoleRepository;
+import com.thieuduong.api_gateway.repositories.IUserRepository;
+
+import reactor.core.publisher.Mono;
+
+@Service
+public class AuthServiceImpl implements ReactiveUserDetailsService {
+
+	@Autowired
+	private IUserRepository userRepository;
+
+	@Autowired
+	private IRoleRepository roleRepository;
+
+	@Override
+	public Mono<UserDetails> findByUsername(String name) {
+		return userRepository.findByName(name).flatMap(user -> roleRepository.findById(user.getRoleId()).map(
+				role -> User.withUsername(user.getName()).password(user.getPassword()).roles(role.getName()).build()));
+	}
+}

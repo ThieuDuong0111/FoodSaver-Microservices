@@ -1,33 +1,36 @@
 package com.thieuduong.user_service.services;
 
-import java.util.List;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.user_service.models.MyUser;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface IUserService {
 	UserDTO convertToDto(MyUser user);
 
 	MyUser convertToEntity(UserDTO userDTO);
 
-	List<MyUser> getAllUsers();
+	Flux<MyUser> getAllUsers();
 
-	List<UserDTO> getAllStores();
+	Flux<UserDTO> getAllStores();
 
-	List<UserDTO> get10NewestStore();
+	Flux<UserDTO> get10NewestStore();
 
 //	UserDTO updateUserInfo(HttpServletRequest request, UserDTO userDTO);
 //
 //	UserDTO updateUserInfoMobile(HttpServletRequest request, UserDTO userDTO);
 
-	MyUser getUserById(int id);
+	Mono<MyUser> getUserById(int id);
 
-	MyUser getUserByName(String name);
+	Mono<MyUser> getUserByName(String name);
 
-	MyUser getUserByImageUrl(String url);
+	Mono<MyUser> getUserByImageUrl(String url);
 
-	MyUser getUserByStoreImageUrl(String url);
+	Mono<MyUser> getUserByStoreImageUrl(String url);
 
-//	MyUser getUserByToken(HttpServletRequest request) throws IllegalArgumentException;
+	Mono<MyUser> getUserByToken(ServerWebExchange request) throws IllegalArgumentException;
 
 }

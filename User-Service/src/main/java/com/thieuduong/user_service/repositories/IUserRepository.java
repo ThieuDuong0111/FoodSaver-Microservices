@@ -1,35 +1,30 @@
 package com.thieuduong.user_service.repositories;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 
 import com.thieuduong.user_service.models.MyUser;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
-public interface IUserRepository extends JpaRepository<MyUser, Integer> {
-	@Query(value = "SELECT * FROM User u WHERE u.role_id = :role_id", nativeQuery = true)
-	Page<MyUser> findAllByRoleId(@Param("role_id") int role_id,
-		Pageable pageable);
+public interface IUserRepository extends R2dbcRepository<MyUser, Integer> {
+//	@Query(value = "SELECT * FROM User u WHERE u.role_id = :role_id")
+//	Flux<MyUser> findAllByRoleId(@Parameter("role_id") int role_id, Pageable pageable);
 
-	@Query(value = "SELECT * FROM User u WHERE u.role_id = 2 ORDER BY u.id DESC LIMIT 10", nativeQuery = true)
-	List<MyUser> get10NewestStore();
-	
-	@Query(value = "SELECT * FROM User u WHERE u.role_id = 2 ORDER BY u.id", nativeQuery = true)
-	List<MyUser> getAllStores();
+	@Query(value = "SELECT * FROM User u WHERE u.role_id = 2 ORDER BY u.id DESC LIMIT 10")
+	Flux<MyUser> get10NewestStore();
 
-	Optional<MyUser> findByName(String name);
+	@Query(value = "SELECT * FROM User u WHERE u.role_id = 2 ORDER BY u.id")
+	Flux<MyUser> getAllStores();
 
-	Optional<MyUser> findByImageUrl(String imageUrl);
+	Mono<MyUser> findByName(String name);
 
-	Optional<MyUser> findByStoreImageUrl(String imageUrl);
+	Mono<MyUser> findByImageUrl(String imageUrl);
+
+	Mono<MyUser> findByStoreImageUrl(String imageUrl);
 
 	Boolean existsByName(String name);
 
