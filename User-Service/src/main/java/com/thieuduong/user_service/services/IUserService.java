@@ -19,9 +19,9 @@ public interface IUserService {
 
 	Flux<UserDTO> get10NewestStore();
 
-//	UserDTO updateUserInfo(HttpServletRequest request, UserDTO userDTO);
-//
-//	UserDTO updateUserInfoMobile(HttpServletRequest request, UserDTO userDTO);
+//	Mono<UserDTO> updateUserInfo(ServerWebExchange request, UserDTO userDTO);
+
+	Mono<UserDTO> updateUserInfoMobile(ServerWebExchange request, UserDTO userDTO);
 
 	Mono<MyUser> getUserById(int id);
 

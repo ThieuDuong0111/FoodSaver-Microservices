@@ -1,8 +1,13 @@
 package com.thieuduong.commons.dto;
 
+import java.io.Serializable;
+
 import org.springframework.web.multipart.MultipartFile;
 
-public class UserDTO {
+public class UserDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private String name;
 	private String imageUrl;

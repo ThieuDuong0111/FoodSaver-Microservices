@@ -1,11 +1,15 @@
 package com.thieuduong.commons.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
-public class ProductDTO {
+public class ProductDTO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 
 	private CategoryDTO category;

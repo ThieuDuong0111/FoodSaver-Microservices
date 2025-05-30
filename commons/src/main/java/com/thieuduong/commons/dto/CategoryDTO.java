@@ -1,8 +1,13 @@
 package com.thieuduong.commons.dto;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.NotEmpty;
 
-public class CategoryDTO {
+public class CategoryDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 
 	@NotEmpty(message = "Name is required.")

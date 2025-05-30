@@ -1,8 +1,12 @@
 package com.thieuduong.commons.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class HomeDTO {
+public class HomeDTO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
 	private List<BannerDTO> banners;
 	private List<CategoryDTO> categories;
 	private List<UserDTO> stores;

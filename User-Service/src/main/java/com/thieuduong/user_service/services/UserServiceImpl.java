@@ -1,12 +1,18 @@
 package com.thieuduong.user_service.services;
 
+import java.util.Base64;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.thieuduong.commons.dto.UserDTO;
+import com.thieuduong.commons.utils.ImageUtils;
 import com.thieuduong.commons.utils.JWTUtils;
+import com.thieuduong.commons.utils.ParseUtils;
+import com.thieuduong.commons.utils.ValidationUtils;
 import com.thieuduong.user_service.models.MyUser;
 import com.thieuduong.user_service.repositories.IUserRepository;
 
@@ -25,10 +31,6 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public UserDTO convertToDto(MyUser user) {
 		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-//		if (user.getImageUrl() != null) {
-//			userDTO.setImageUrl("http://localhost:8080/api/image/user/"
-//				+ user.getImageUrl());
-//		}
 		return userDTO;
 	}
 
@@ -43,71 +45,74 @@ public class UserServiceImpl implements IUserService {
 	}
 
 //	@Override
-//	public UserDTO updateUserInfo(HttpServletRequest request, UserDTO userDTO) {
+//	public Mono<UserDTO> updateUserInfo(ServerWebExchange request, UserDTO userDTO) {
 //
-//		MyUser user = getUserByToken(request);
-//		// update Image
-//		if (userDTO.getImageFile() != null) {
-//			MultipartFile image = userDTO.getImageFile();
-//			try {
-//				user.setAvatar(Base64.getEncoder().encodeToString(ImageUtils.resizeImage(image.getBytes(), 500, 500)));
-//				user.setImageType(image.getContentType());
-//				String array[] = image.getContentType().split("/");
-//				String imageUrl = ParseUtils.parseImageUrl(image.getBytes());
-//				if (array.length > 1) {
-//					user.setImageUrl(imageUrl + "." + array[1]);
-//				} else {
-//					user.setImageUrl(imageUrl);
+//		return getUserByToken(request).map(user -> {
+//			if (userDTO.getImageFile() != null) {
+//				MultipartFile image = userDTO.getImageFile();
+//				try {
+//					user.setAvatar(
+//							Base64.getEncoder().encodeToString(ImageUtils.resizeImage(image.getBytes(), 500, 500)));
+//					user.setImageType(image.getContentType());
+//					String array[] = image.getContentType().split("/");
+//					String imageUrl = ParseUtils.parseImageUrl(image.getBytes());
+//					if (array.length > 1) {
+//						user.setImageUrl(imageUrl + "." + array[1]);
+//					} else {
+//						user.setImageUrl(imageUrl);
+//					}
+//				} catch (Exception e) {
+//					System.out.println("Upload Image Exception: " + e.getMessage());
 //				}
-//			} catch (Exception e) {
-//				System.out.println("Upload Image Exception: " + e.getMessage());
 //			}
-//		}
-//		// update email
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getEmail())) {
-//			user.setEmail(userDTO.getEmail());
-//		}
-//		// update phone
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getPhone())) {
-//			user.setPhone(userDTO.getPhone());
-//		}
-//		// update address
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getAddress())) {
-//			user.setAddress(userDTO.getAddress());
-//		}
-//		this.userRepository.save(user);
-//		return convertToDto(getUserById(user.getId()));
+//			// update email
+//			if (!ValidationUtils.isNullOrEmpty(userDTO.getEmail())) {
+//				user.setEmail(userDTO.getEmail());
+//			}
+//			// update phone
+//			if (!ValidationUtils.isNullOrEmpty(userDTO.getPhone())) {
+//				user.setPhone(userDTO.getPhone());
+//			}
+//			// update address
+//			if (!ValidationUtils.isNullOrEmpty(userDTO.getAddress())) {
+//				user.setAddress(userDTO.getAddress());
+//			}
+//			this.userRepository.save(user);
+//			return Mono.just(convertToDto(getUserById(user.getId())));
+//		});
 //	}
 
-//	@Override
-//	public UserDTO updateUserInfoMobile(HttpServletRequest request, UserDTO userDTO) {
-//		MyUser user = getUserByToken(request);
-//		// update Image
-//		if (userDTO.getImageFile() != null) {
-//			MultipartFile image = userDTO.getImageFile();
-//			try {
-//				user.setAvatar(Base64.getEncoder().encodeToString(ImageUtils.resizeImage(image.getBytes(), 500, 500)));
-//				user.setImageType("image/jpeg");
-//				user.setImageUrl(ParseUtils.parseImageUrl(image.getBytes()) + ".jpeg");
-//			} catch (Exception e) {
-//				System.out.println("Upload Image Exception: " + e.getMessage());
-//			}
-//		}
-//		// update email
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getEmail())) {
-//			user.setEmail(userDTO.getEmail());
-//		}
-//		// update phone
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getPhone())) {
-//			user.setPhone(userDTO.getPhone());
-//		}
-//		// update address
-//		if (!ValidationUtils.isNullOrEmpty(userDTO.getAddress())) {
-//			user.setAddress(userDTO.getAddress());
-//		}
-//		this.userRepository.save(user);
-//		return convertToDto(getUserById(user.getId()));
-//	}
+	@Override
+	public Mono<UserDTO> updateUserInfoMobile(ServerWebExchange request, UserDTO userDTO) {
+		return getUserByToken(request).flatMap(user -> {
+			// update Image
+			if (userDTO.getImageFile() != null) {
+				MultipartFile image = userDTO.getImageFile();
+				try {
+					user.setAvatar(
+							Base64.getEncoder().encodeToString(ImageUtils.resizeImage(image.getBytes(), 500, 500)));
+					user.setImageType("image/jpeg");
+					user.setImageUrl(ParseUtils.parseImageUrl(image.getBytes()) + ".jpeg");
+				} catch (Exception e) {
+					System.out.println("Upload Image Exception: " + e.getMessage());
+				}
+			}
+			// update email
+			if (!ValidationUtils.isNullOrEmpty(userDTO.getEmail())) {
+				user.setEmail(userDTO.getEmail());
+			}
+			// update phone
+			if (!ValidationUtils.isNullOrEmpty(userDTO.getPhone())) {
+				user.setPhone(userDTO.getPhone());
+			}
+			// update address
+			if (!ValidationUtils.isNullOrEmpty(userDTO.getAddress())) {
+				user.setAddress(userDTO.getAddress());
+			}
+			this.userRepository.save(user);
+			return userRepository.save(user).map(this::convertToDto);
+		});
+	}
 
 	@Override
 	public Mono<MyUser> getUserById(int id) {

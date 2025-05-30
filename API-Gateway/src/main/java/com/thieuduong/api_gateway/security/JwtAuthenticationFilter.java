@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -35,7 +36,7 @@ public class JwtAuthenticationFilter implements WebFilter {
 			username = JWTUtils.extractUsername(extractedToken);
 		}
 		final String token = extractedToken;
-		if (username != null) {
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			return authServiceImpl.findByUsername(username) // Mono<MyUserDetails>
 					.filter(myUserDetails -> validateToken(token, myUserDetails))
 					.map(myUserDetails -> new UsernamePasswordAuthenticationToken(myUserDetails, null,
@@ -51,17 +52,6 @@ public class JwtAuthenticationFilter implements WebFilter {
 						return chain.filter(modifiedExchange)
 								.contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
 					});
-//			return authServiceImpl.findByUsername(username) // Mono<MyUserDetails>
-//					.filter(myUserDetails -> validateToken(token, myUserDetails))
-//					.map(myUserDetails -> new UsernamePasswordAuthenticationToken(myUserDetails, null,
-//							myUserDetails.getAuthorities()))
-//					.flatMap(auth -> {
-//						ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-//								.header("name", auth.getName()).build();
-//						ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
-//						return chain.filter(modifiedExchange)
-//								.contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
-//					});
 		}
 		return chain.filter(exchange);
 	}
