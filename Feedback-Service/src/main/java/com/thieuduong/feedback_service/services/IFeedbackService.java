@@ -10,7 +10,7 @@ public interface IFeedbackService {
 
 	FeedbackDTO convertToDto(Feedback feedBack);
 
-	void addFeedback(AddFeedbackDTO addFeedBackDTO);
+	AddFeedbackDTO addFeedback(AddFeedbackDTO addFeedBackDTO);
 
 	List<FeedbackDTO> getFeedbacksByProductId(int productId);
 

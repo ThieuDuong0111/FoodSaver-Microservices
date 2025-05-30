@@ -8,6 +8,6 @@ public interface IAnswerService {
 
 	AnswerDTO convertToDto(Answer Answer);
 
-//	void addAnswer(AddAnswerDTO addAnswerDTO);
+	void addAnswer(AddAnswerDTO addAnswerDTO);
 
 }

@@ -48,13 +48,14 @@ public class FeedbackServiceImpl implements IFeedbackService {
 	}
 
 	@Override
-	public void addFeedback(AddFeedbackDTO addFeedbackDTO) {
+	public AddFeedbackDTO addFeedback(AddFeedbackDTO addFeedbackDTO) {
 		if (addFeedbackDTO.getRating() > 5) {
 			addFeedbackDTO.setRating(5);
 		}
 		Feedback feed = new Feedback(addFeedbackDTO.getUserId(), addFeedbackDTO.getProductId(),
 				addFeedbackDTO.getComment(), addFeedbackDTO.getRating(), new Date());
 		feedbackRepository.save(feed);
+		return addFeedbackDTO;
 	}
 
 	@Override
