@@ -22,10 +22,11 @@ public class UserController {
 	@GetMapping("/user/user-info")
 	public Mono<ResponseEntity<UserDTO>> getUserInfo(ServerWebExchange exchange) {
 		String name = exchange.getRequest().getHeaders().getFirst("name");
+		Integer id = Integer.valueOf(exchange.getRequest().getHeaders().getFirst("id"));
 		if (name == null || name.isEmpty()) {
 			return Mono.just(ResponseEntity.badRequest().build());
 		}
-		return userServiceImpl.getUserByName(name).map(userServiceImpl::convertToDto)
+		return userServiceImpl.getUserById(id).map(userServiceImpl::convertToDto)
 				.map(userDTO -> ResponseEntity.ok(userDTO)).defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 //
