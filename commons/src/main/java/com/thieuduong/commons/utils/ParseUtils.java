@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -74,5 +77,23 @@ public class ParseUtils {
 		default:
 			return "";
 		}
+	}
+
+	public static Boolean convertByteArrayToBoolean(byte[] bytes) {
+		if (bytes == null || bytes.length == 0) {
+			return null; // hoặc false tùy logic của bạn
+		}
+		return bytes[0] != 0;
+	}
+
+	public static String convertToDate(LocalDateTime localDateTime) {
+		if (localDateTime == null)
+			return null;
+
+		// Gắn timezone offset (UTC)
+		ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneOffset.UTC);
+
+		// Format theo ISO 8601
+		return zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 	}
 }

@@ -1,75 +1,95 @@
 package com.thieuduong.order_service.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "OrderDetail")
+@Table("OrderDetail")
 public class OrderDetail {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
-	@ManyToOne
-	@JoinColumn(name = "order_id")
-	private Order order;
+	@Column("order_id")
+	private Integer orderId; // Foreign key được biểu diễn bằng kiểu đơn giản (Integer)
 
+	@Column("product_id")
 	private Integer productId;
 
+	@Column("product_name")
 	private String productName;
 
-	@Lob
-	@Column(columnDefinition = "MEDIUMBLOB")
+	// Không có @Lob trong R2DBC - dùng String hoặc ByteArray nếu cần blob thực sự
 	private String image;
 
-	@Column(columnDefinition = "TEXT")
+	@Column("product_image")
 	private String productImage;
 
-	@Column(length = 20)
+	@Column("image_type")
 	private String imageType;
 
+	@Column("unit_quantity")
 	private int unitQuantity;
 
+	@Column("unit_price")
 	private double unitPrice;
 
-	public OrderDetail() {
-		super();
-	}
+	// Getters and Setters
 
-	public OrderDetail(Order order, int productId, String productName, String productImage, String imageType,
-			String image, int unitQuantity, double unitPrice) {
-		super();
-		this.order = order;
-		this.productId = productId;
-		this.productName = productName;
-		this.productImage = productImage;
-		this.imageType = imageType;
-		this.image = image;
-		this.unitQuantity = unitQuantity;
-		this.unitPrice = unitPrice;
-	}
-
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public Order getOrder() {
-		return order;
+	public Integer getOrderId() {
+		return orderId;
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 
 	public int getUnitQuantity() {
@@ -87,45 +107,4 @@ public class OrderDetail {
 	public void setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-
-	public int getProductId() {
-		return productId;
-	}
-
-	public void setProductId(int productId) {
-		this.productId = productId;
-	}
-
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public String getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(String productImage) {
-		this.productImage = productImage;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getImageType() {
-		return imageType;
-	}
-
-	public void setImageType(String imageType) {
-		this.imageType = imageType;
-	}
-
 }

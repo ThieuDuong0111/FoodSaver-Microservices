@@ -39,10 +39,10 @@ public class HomeController {
 	@GetMapping
 	public ResponseEntity<?> getHome() {
 		// 1. Kiểm tra cache trước
-		HomeDTO cachedHome = (HomeDTO) redisTemplate.opsForValue().get(HOME_CACHE_KEY);
-		if (cachedHome != null) {
-			return ResponseEntity.ok(cachedHome);
-		}
+//		HomeDTO cachedHome = (HomeDTO) redisTemplate.opsForValue().get(HOME_CACHE_KEY);
+//		if (cachedHome != null) {
+//			return ResponseEntity.ok(cachedHome);
+//		}
 		HomeDTO homeDTO = new HomeDTO();
 		homeDTO.setBanners(bannerClient.getAllBanners());
 		homeDTO.setCategories(categoryServiceImpl.getAllCategories());
@@ -51,7 +51,7 @@ public class HomeController {
 		homeDTO.setNewestProducts(productServiceImpl.getTop20NewestProducts());
 
 		// 3. Lưu cache lại vào Redis (ví dụ: 5 phút)
-		redisTemplate.opsForValue().set(HOME_CACHE_KEY, homeDTO, Duration.ofMinutes(5));
+//		redisTemplate.opsForValue().set(HOME_CACHE_KEY, homeDTO, Duration.ofMinutes(5));
 
 		return ResponseEntity.ok(homeDTO);
 	}

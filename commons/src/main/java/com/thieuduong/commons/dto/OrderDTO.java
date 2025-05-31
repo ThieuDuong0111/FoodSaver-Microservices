@@ -1,6 +1,6 @@
 package com.thieuduong.commons.dto;
 
-import java.util.Date;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderDTO {
@@ -8,11 +8,11 @@ public class OrderDTO {
 
 	private List<OrderDetailDTO> orderDetails;
 
-	private Date publishedDate;
+	private String publishedDate;
 
 	private String orderCode;
 
-	private double totalAmount;
+	private BigDecimal totalAmount;
 
 	private Boolean isPaid;
 
@@ -50,11 +50,11 @@ public class OrderDTO {
 		this.orderDetails = orderDetails;
 	}
 
-	public Date getPublishedDate() {
+	public String getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Date publishedDate) {
+	public void setPublishedDate(String publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 
@@ -66,11 +66,11 @@ public class OrderDTO {
 		this.orderCode = orderCode;
 	}
 
-	public double getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(double totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

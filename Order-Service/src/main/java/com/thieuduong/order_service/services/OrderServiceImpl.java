@@ -1,64 +1,69 @@
-//package com.thieuduong.order_service.services;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//import org.modelmapper.ModelMapper;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import com.funix.foodsaverAPI.dto.OrderDTO;
-//import com.funix.foodsaverAPI.models.MyUser;
-//import com.funix.foodsaverAPI.models.Order;
-//import com.funix.foodsaverAPI.repositories.IOrderRepository;
-//import com.funix.foodsaverAPI.utils.ParseUtils;
-//
-//import jakarta.servlet.http.HttpServletRequest;
-//
-//@Service
-//public class OrderServiceImpl implements IOrderService {
-//
-//	@Autowired
-//	private IOrderRepository orderRepository;
-//
-//	@Autowired
-//	private UserServiceImpl userServiceImpl;
-//
-//	@Autowired
-//	private ModelMapper modelMapper;
-//
-//	@Override
-//	public OrderDTO convertToDto(Order Order) {
-//		OrderDTO orderDTO = modelMapper.map(Order, OrderDTO.class);
-//		orderDTO.setStatusTypeParse(ParseUtils.convertStatusType(Order.getStatusType()));
-//		orderDTO.setPaymentTypeParse(ParseUtils.convertPaymentType(Order.getPaymentType()));
-//		return orderDTO;
-//	}
-//
-//	@Override
-//	public Order convertToEntity(OrderDTO orderDTO) {
-//		return modelMapper.map(orderDTO, Order.class);
-//	}
-//
-//	@Override
-//	public OrderDTO getOrderById(int id) {
-//		Optional<Order> optionalOrder = orderRepository.findById(id);
-//		Order order = null;
-//		MyUser creator = null;
-//		if (optionalOrder.isPresent()) {
-//			order = optionalOrder.get();
-//			creator = userServiceImpl.getUserById(order.getCreatorId());
-//		} else {
-//			throw new RuntimeException("Order not found for id : " + id);
-//		}
-//		OrderDTO orderDTO = convertToDto(order);
-//		orderDTO.setCreator(userServiceImpl.convertToDto(creator));
-//		return orderDTO;
-//	}
-//
-//	@Override
-//	public List<OrderDTO> getOrderByUserId(HttpServletRequest request) {
-//		MyUser user = userServiceImpl.getUserByToken(request);
-//		return orderRepository.findOrderByUserId(user.getId()).stream()
-//			.map(this::convertToDto).toList();
-//	}
-//}
+package com.thieuduong.order_service.services;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.thieuduong.commons.clients.IUserClient;
+import com.thieuduong.commons.dto.OrderDTO;
+import com.thieuduong.commons.dto.OrderDetailDTO;
+import com.thieuduong.commons.utils.ParseUtils;
+import com.thieuduong.order_service.models.Order;
+import com.thieuduong.order_service.repositories.IOrderDetailRepository;
+import com.thieuduong.order_service.repositories.IOrderRepository;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+public class OrderServiceImpl implements IOrderService {
+
+	@Autowired
+	private IOrderRepository orderRepository;
+
+	@Autowired
+	private IOrderDetailRepository orderDetailRepository;
+
+	@Autowired
+	private IUserClient userClient;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Override
+	public Mono<OrderDTO> convertToDto(Order order) {
+		return orderDetailRepository.findAllByOrderId(order.getId())
+				.map(orderDetail -> modelMapper.map(orderDetail, OrderDetailDTO.class)).collectList()
+				.map(orderDetailDTO -> {
+					OrderDTO orderDTO = new OrderDTO();
+					orderDTO.setId(order.getId());
+					orderDTO.setOrderDetails(orderDetailDTO);
+					orderDTO.setPublishedDate(ParseUtils.convertToDate(order.getPublishedDate()));
+					orderDTO.setCreator(userClient.getStoreById(order.getCreatorId()));
+					orderDTO.setOrderCode(order.getOrderCode());
+					orderDTO.setTotalAmount(order.getTotalAmount());
+					orderDTO.setCreatorName(order.getCreatorName());
+					orderDTO.setStatusType(order.getStatusType());
+					orderDTO.setPaymentType(order.getPaymentType());
+					orderDTO.setShippingType(order.getShippingType());
+					orderDTO.setStatusTypeParse(ParseUtils.convertStatusType(order.getStatusType()));
+					orderDTO.setPaymentTypeParse(ParseUtils.convertPaymentType(order.getPaymentType()));
+					orderDTO.setIsPaid(ParseUtils.convertByteArrayToBoolean(order.getIsPaid()));
+					return orderDTO;
+				});
+
+	}
+
+	@Override
+	public Mono<OrderDTO> getOrderById(int id) {
+		return orderRepository.findById(id)
+				.switchIfEmpty(Mono.error(new RuntimeException("Order not found for id : " + id)))
+				.flatMap(order -> convertToDto(order));
+
+	}
+
+	@Override
+	public Flux<OrderDTO> getOrdersByUserId(int userId) {
+		return orderRepository.findOrdersByUserId(userId).flatMap(this::convertToDto);
+	}
+}

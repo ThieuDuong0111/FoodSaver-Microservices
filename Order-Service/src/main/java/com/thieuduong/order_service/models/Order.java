@@ -1,69 +1,56 @@
 package com.thieuduong.order_service.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 
-@Entity
-@Table(name = "UserOrder")
+@Table("my_order")
 public class Order {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@OneToMany(mappedBy = "order")
-	private List<OrderDetail> orderDetails;
-
+	@Column("user_id")
 	private Integer userId;
 
+	@Column("creator_id")
 	private Integer creatorId;
 
+	@Column("creator_name")
 	private String creatorName;
 
-	private Date publishedDate;
+	@Column("published_date")
+	private LocalDateTime publishedDate;
 
-	@Column(length = 100)
+	@Column("order_code")
 	private String orderCode;
 
+	@Column("total_amount")
 	private BigDecimal totalAmount;
 
-	private Boolean isPaid;
+	@Column("is_paid")
+	private byte[] isPaid;
 
-	@Column(nullable = false)
+	@Column("status_type")
 	private int statusType;
 
-	@Column(nullable = false)
+	@Column("payment_type")
 	private int paymentType;
 
-	@Column(nullable = false)
+	@Column("shipping_type")
 	private int shippingType;
 
-	public Order() {
-		super();
-	}
+	// Getters and Setters
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
-	}
-
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
 	}
 
 	public Integer getUserId() {
@@ -74,11 +61,27 @@ public class Order {
 		this.userId = userId;
 	}
 
-	public Date getPublishedDate() {
+	public Integer getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Integer creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
+	public LocalDateTime getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Date publishedDate) {
+	public void setPublishedDate(LocalDateTime publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 
@@ -98,28 +101,12 @@ public class Order {
 		this.totalAmount = totalAmount;
 	}
 
-	public Boolean getIsPaid() {
+	public byte[] getIsPaid() {
 		return isPaid;
 	}
 
-	public void setIsPaid(Boolean isPaid) {
+	public void setIsPaid(byte[] isPaid) {
 		this.isPaid = isPaid;
-	}
-
-	public int getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(int creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public String getCreatorName() {
-		return creatorName;
-	}
-
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
 	}
 
 	public int getStatusType() {
@@ -145,5 +132,4 @@ public class Order {
 	public void setShippingType(int shippingType) {
 		this.shippingType = shippingType;
 	}
-
 }

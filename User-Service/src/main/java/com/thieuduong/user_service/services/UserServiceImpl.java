@@ -44,44 +44,6 @@ public class UserServiceImpl implements IUserService {
 		return modelMapper.map(userDTO, MyUser.class);
 	}
 
-//	@Override
-//	public Mono<UserDTO> updateUserInfo(ServerWebExchange request, UserDTO userDTO) {
-//
-//		return getUserByToken(request).map(user -> {
-//			if (userDTO.getImageFile() != null) {
-//				MultipartFile image = userDTO.getImageFile();
-//				try {
-//					user.setAvatar(
-//							Base64.getEncoder().encodeToString(ImageUtils.resizeImage(image.getBytes(), 500, 500)));
-//					user.setImageType(image.getContentType());
-//					String array[] = image.getContentType().split("/");
-//					String imageUrl = ParseUtils.parseImageUrl(image.getBytes());
-//					if (array.length > 1) {
-//						user.setImageUrl(imageUrl + "." + array[1]);
-//					} else {
-//						user.setImageUrl(imageUrl);
-//					}
-//				} catch (Exception e) {
-//					System.out.println("Upload Image Exception: " + e.getMessage());
-//				}
-//			}
-//			// update email
-//			if (!ValidationUtils.isNullOrEmpty(userDTO.getEmail())) {
-//				user.setEmail(userDTO.getEmail());
-//			}
-//			// update phone
-//			if (!ValidationUtils.isNullOrEmpty(userDTO.getPhone())) {
-//				user.setPhone(userDTO.getPhone());
-//			}
-//			// update address
-//			if (!ValidationUtils.isNullOrEmpty(userDTO.getAddress())) {
-//				user.setAddress(userDTO.getAddress());
-//			}
-//			this.userRepository.save(user);
-//			return Mono.just(convertToDto(getUserById(user.getId())));
-//		});
-//	}
-
 	@Override
 	public Mono<UserDTO> updateUserInfoMobile(ServerWebExchange request, UserDTO userDTO) {
 		return getUserByToken(request).flatMap(user -> {

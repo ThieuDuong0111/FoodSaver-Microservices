@@ -1,17 +1,16 @@
 package com.thieuduong.order_service.services;
 
-import java.util.List;
-
 import com.thieuduong.commons.dto.OrderDTO;
 import com.thieuduong.order_service.models.Order;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface IOrderService {
 
-	OrderDTO convertToDto(Order order);
+	Mono<OrderDTO> convertToDto(Order order);
 
-	Order convertToEntity(OrderDTO orderDTO);
+	Flux<OrderDTO> getOrdersByUserId(int userId);
 
-//	List<OrderDTO> getOrderByUserId(HttpServletRequest request);
-
-	OrderDTO getOrderById(int id);
+	Mono<OrderDTO> getOrderById(int id);
 }

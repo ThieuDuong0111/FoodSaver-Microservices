@@ -1,12 +1,12 @@
 package com.thieuduong.order_service.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thieuduong.order_service.models.OrderDetail;
 import com.thieuduong.order_service.repositories.IOrderDetailRepository;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class OrderDetailServiceImpl implements IOrderDetailService {
@@ -15,26 +15,12 @@ public class OrderDetailServiceImpl implements IOrderDetailService {
 	private IOrderDetailRepository orderDetailRepository;
 
 	@Override
-	public OrderDetail getOrderDetailByImageUrl(String url) {
-		Optional<OrderDetail> optionalOrderDetail = orderDetailRepository.findByProductImage(url);
-		OrderDetail orderDetail = null;
-		if (optionalOrderDetail.isPresent()) {
-			orderDetail = optionalOrderDetail.get();
-			return orderDetail;
-		} else {
-			return null;
-		}
+	public Mono<OrderDetail> getOrderDetailByImageUrl(String url) {
+		return orderDetailRepository.findByProductImage(url);
 	}
 
 	@Override
-	public OrderDetail getOrderDetailById(int id) {
-		Optional<OrderDetail> optionalOrderDetail = orderDetailRepository.findById(id);
-		OrderDetail orderDetail = null;
-		if (optionalOrderDetail.isPresent()) {
-			orderDetail = optionalOrderDetail.get();
-			return orderDetail;
-		} else {
-			return null;
-		}
+	public Mono<OrderDetail> getOrderDetailById(int id) {
+		return orderDetailRepository.findById(id);
 	}
 }
