@@ -1,45 +1,40 @@
 package com.thieuduong.cart_service.models;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "Cart")
+@Table("Cart")
 public class Cart {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
-	@OneToMany(mappedBy = "cart")
-	private List<CartItem> cartItems;
-
+	@Column("user_id")
 	private Integer userId;
 
-	private Date publishedDate;
+	@Column("published_date")
+	private LocalDateTime publishedDate;
 
-	private Boolean isDone;
+	@Column("is_done")
+	private byte[] isDone;
 
-	public int getId() {
+	// Constructors, Getters, Setters
+	public Cart(Integer userId, LocalDateTime publishedDate, byte[] isDone) {
+		super();
+		this.userId = userId;
+		this.publishedDate = publishedDate;
+		this.isDone = isDone;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public List<CartItem> getCartItems() {
-		return cartItems;
-	}
-
-	public void setCartItems(List<CartItem> cartItems) {
-		this.cartItems = cartItems;
 	}
 
 	public Integer getUserId() {
@@ -50,19 +45,19 @@ public class Cart {
 		this.userId = userId;
 	}
 
-	public Date getPublishedDate() {
+	public LocalDateTime getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Date publishedDate) {
+	public void setPublishedDate(LocalDateTime publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 
-	public Boolean getIsDone() {
+	public byte[] getIsDone() {
 		return isDone;
 	}
 
-	public void setIsDone(Boolean isDone) {
+	public void setIsDone(byte[] isDone) {
 		this.isDone = isDone;
 	}
 }

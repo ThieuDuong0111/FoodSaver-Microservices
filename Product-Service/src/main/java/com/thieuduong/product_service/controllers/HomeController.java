@@ -1,9 +1,7 @@
 package com.thieuduong.product_service.controllers;
 
-import java.time.Duration;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +29,10 @@ public class HomeController {
 	@Autowired
 	private ProductServiceImpl productServiceImpl;
 
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-
-	private static final String HOME_CACHE_KEY = "home:data";
+//	@Autowired
+//	private RedisTemplate<String, Object> redisTemplate;
+//
+//	private static final String HOME_CACHE_KEY = "home:data";
 
 	@GetMapping
 	public ResponseEntity<?> getHome() {

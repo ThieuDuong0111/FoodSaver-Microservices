@@ -1,42 +1,41 @@
-//package com.thieuduong.cart_service.services;
-//
-//import java.math.BigDecimal;
-//import java.text.ParseException;
-//import java.util.List;
-//
-//import com.funix.foodsaverAPI.dto.CartDTO;
-//import com.funix.foodsaverAPI.dto.CartItemDTO;
-//import com.funix.foodsaverAPI.dto.CartItemProductDTO;
-//import com.funix.foodsaverAPI.dto.OrderDTO;
-//import com.funix.foodsaverAPI.models.Cart;
-//import com.funix.foodsaverAPI.models.CartItem;
-//import com.funix.foodsaverAPI.models.Order;
-//import com.funix.foodsaverAPI.models.OrderDetail;
-//
-//import jakarta.servlet.http.HttpServletRequest;
-//
-//public interface ICartService {
-//
-//	CartDTO convertToDto(Cart cart);
-//
+package com.thieuduong.cart_service.services;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
+
+import com.thieuduong.cart_service.models.Cart;
+import com.thieuduong.cart_service.models.CartItem;
+import com.thieuduong.commons.dto.CartDTO;
+import com.thieuduong.commons.dto.CartItemDTO;
+import com.thieuduong.commons.dto.CartItemProductDTO;
+import com.thieuduong.commons.dto.OrderDTO;
+import com.thieuduong.commons.dto.ProductDTO;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+public interface ICartService {
+
+	Mono<CartDTO> convertToDto(Cart cart);
+
+	CartItemDTO convertoCartItemDTO(CartItem cartItem, ProductDTO productDTO);
+
 //	OrderDetail convertToOrderDetail(CartItem cartItem);
-//
-//	CartDTO getItems(HttpServletRequest request);
-//
-//	CartDTO updateItem(HttpServletRequest request,
-//		CartItemProductDTO cartItemProductDTO);
-//
-//	CartDTO deleteItem(HttpServletRequest request,
-//		CartItemDTO cartItemDTO);
-//
-//	CartDTO checkout(HttpServletRequest request)
-//		throws IllegalArgumentException, ParseException;
-//
-//	List<OrderDTO> completeOrder(OrderDTO orderDTO, HttpServletRequest request) throws ParseException;
-//
-//	BigDecimal calculateTotalAmountOfCart(Cart cart);
-//
+
+	Mono<CartDTO> getItems(Integer userId);
+
+	Mono<CartDTO> updateItem(Integer userId, CartItemProductDTO cartItemProductDTO);
+
+	Mono<CartDTO> deleteItem(Integer userId, CartItemDTO cartItemDTO);
+
+	Mono<CartDTO> checkout(Integer userId) throws IllegalArgumentException, ParseException;
+
+	Flux<OrderDTO> completeOrder(Integer userId, OrderDTO orderDTO) throws ParseException;
+
+	BigDecimal calculateTotalAmountOfCart(List<CartItem> cartItems);
+
 //	BigDecimal calculateTotalAmountOfOrder(Order order);
-//
-//	void seperateCartItemsByCreator(Cart cart, CartDTO cartDTO);
-//}
+
+	Mono<Void> seperateCartItemsByCreator(List<CartItem> cartItems, CartDTO cartDTO);
+}

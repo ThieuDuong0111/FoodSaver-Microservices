@@ -1,7 +1,6 @@
 package com.thieuduong.commons.dto;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 public class CartDTO {
@@ -11,7 +10,7 @@ public class CartDTO {
 
 	private UserDTO userCarts;
 
-	private Date publishedDate;
+	private String publishedDate;
 
 	private Boolean isDone;
 
@@ -27,11 +26,11 @@ public class CartDTO {
 		this.id = id;
 	}
 
-	public Date getPublishedDate() {
+	public String getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Date publishedDate) {
+	public void setPublishedDate(String publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 

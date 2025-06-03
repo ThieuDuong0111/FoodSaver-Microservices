@@ -1,44 +1,46 @@
 package com.thieuduong.cart_service.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 
-@Entity
-@Table(name = "CartItem")
+@Table("cart_item")
 public class CartItem {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
-	@ManyToOne
-	@JoinColumn(name = "cart_id")
-	private Cart cart;
+	@Column("cart_id")
+	private Integer cartId;
 
+	@Column("product_id")
 	private Integer productId;
 
+	@Column("creator_id")
+	private Integer creatorId;
+
+	@Column("unit_quantity")
 	private int unitQuantity;
 
+	@Column("unit_price")
 	private double unitPrice;
 
-	public int getId() {
+	// Getters and setters
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public Cart getCart() {
-		return cart;
+	public Integer getCartId() {
+		return cartId;
 	}
 
-	public void setCart(Cart cart) {
-		this.cart = cart;
+	public void setCartId(Integer cartId) {
+		this.cartId = cartId;
 	}
 
 	public Integer getProductId() {
@@ -47,6 +49,14 @@ public class CartItem {
 
 	public void setProductId(Integer productId) {
 		this.productId = productId;
+	}
+
+	public Integer getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Integer creatorId) {
+		this.creatorId = creatorId;
 	}
 
 	public int getUnitQuantity() {
