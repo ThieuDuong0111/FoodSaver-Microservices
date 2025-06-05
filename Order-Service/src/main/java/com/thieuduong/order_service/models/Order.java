@@ -43,6 +43,20 @@ public class Order {
 	@Column("shipping_type")
 	private int shippingType;
 
+	public Order(Integer userId, Integer creatorId, String creatorName, LocalDateTime publishedDate, String orderCode,
+			byte[] isPaid, int statusType, int paymentType, int shippingType) {
+		super();
+		this.userId = userId;
+		this.creatorId = creatorId;
+		this.creatorName = creatorName;
+		this.publishedDate = publishedDate;
+		this.orderCode = orderCode;
+		this.isPaid = isPaid;
+		this.statusType = statusType;
+		this.paymentType = paymentType;
+		this.shippingType = shippingType;
+	}
+
 	// Getters and Setters
 
 	public Integer getId() {

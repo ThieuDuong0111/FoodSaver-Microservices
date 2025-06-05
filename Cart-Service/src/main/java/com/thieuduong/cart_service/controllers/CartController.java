@@ -16,7 +16,9 @@ import com.thieuduong.cart_service.services.CartServiceImpl;
 import com.thieuduong.commons.dto.CartDTO;
 import com.thieuduong.commons.dto.CartItemDTO;
 import com.thieuduong.commons.dto.CartItemProductDTO;
+import com.thieuduong.commons.dto.OrderDTO;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -53,14 +55,11 @@ public class CartController {
 		Integer id = Integer.valueOf(exchange.getRequest().getHeaders().getFirst("id"));
 		return cartServiceImpl.checkout(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.badRequest().build());
 	}
-//
-//	@PostMapping("/complete-order")
-//	public ResponseEntity<?> completeOrder(@RequestBody OrderDTO orderDTO, HttpServletRequest request)
-//			throws ParseException {
-//		try {
-//			return ResponseEntity.ok(cartServiceImpl.completeOrder(orderDTO, request));
-//		} catch (IllegalArgumentException e) {
-//			return new ResponseEntity<>(new ErrorMessageResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-//		}
-//	}
+
+	@PostMapping("/complete-order")
+	public Mono<ResponseEntity<Flux<OrderDTO>>> completeOrder(ServerWebExchange exchange,
+			@RequestBody OrderDTO orderDTO) throws ParseException {
+		Integer id = Integer.valueOf(exchange.getRequest().getHeaders().getFirst("id"));
+		return Mono.just(ResponseEntity.ok().body(cartServiceImpl.completeOrder(id, orderDTO)));
+	}
 }

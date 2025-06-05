@@ -6,7 +6,7 @@ import java.util.Date;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
-public class ProductDTO implements Serializable {
+public class ProductOrderDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,6 +17,8 @@ public class ProductDTO implements Serializable {
 	private UserDTO creator;
 
 	private UnitDTO unit;
+
+	private String image;
 
 	@NotEmpty(message = "Name không được bỏ trống.")
 	private String name;
@@ -60,6 +62,14 @@ public class ProductDTO implements Serializable {
 	private Boolean isOutOfStock;
 
 	private int soldCount;
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public int getId() {
 		return id;

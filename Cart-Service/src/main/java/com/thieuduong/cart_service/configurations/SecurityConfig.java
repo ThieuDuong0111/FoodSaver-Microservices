@@ -1,4 +1,4 @@
-package com.thieuduong.cart_service;
+package com.thieuduong.cart_service.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

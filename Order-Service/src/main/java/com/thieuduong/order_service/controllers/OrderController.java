@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 
+import com.thieuduong.commons.dto.CompleteOrderDTO;
 import com.thieuduong.commons.dto.OrderDTO;
 import com.thieuduong.order_service.services.OrderServiceImpl;
 
@@ -31,6 +34,11 @@ public class OrderController {
 	public Mono<ResponseEntity<OrderDTO>> getOrderDetail(@PathVariable int id) {
 		return orderServiceImpl.getOrderById(id).map(ResponseEntity::ok)
 				.defaultIfEmpty(ResponseEntity.badRequest().build());
+	}
+
+	@PostMapping({ "/complete-order" })
+	public Mono<ResponseEntity<Flux<OrderDTO>>> completeOrder(@RequestBody CompleteOrderDTO completeOrderDTO) {
+		return Mono.just(ResponseEntity.ok().body(orderServiceImpl.completeOrder(completeOrderDTO)));
 	}
 
 }

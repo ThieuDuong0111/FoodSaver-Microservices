@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("OrderDetail")
+@Table("order_detail")
 public class OrderDetail {
 
 	@Id
@@ -33,6 +33,19 @@ public class OrderDetail {
 
 	@Column("unit_price")
 	private double unitPrice;
+
+	public OrderDetail(Integer orderId, Integer productId, String productName, String image, String productImage,
+			String imageType, int unitQuantity, double unitPrice) {
+		super();
+		this.orderId = orderId;
+		this.productId = productId;
+		this.productName = productName;
+		this.image = image;
+		this.productImage = productImage;
+		this.imageType = imageType;
+		this.unitQuantity = unitQuantity;
+		this.unitPrice = unitPrice;
+	}
 
 	// Getters and Setters
 

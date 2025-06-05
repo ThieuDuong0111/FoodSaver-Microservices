@@ -13,6 +13,7 @@ import com.thieuduong.commons.clients.IFeedbackClient;
 import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.FeedbackInformationDTO;
 import com.thieuduong.commons.dto.ProductDTO;
+import com.thieuduong.commons.dto.ProductOrderDTO;
 import com.thieuduong.commons.dto.UserDTO;
 import com.thieuduong.commons.utils.ParseUtils;
 import com.thieuduong.product_service.models.Product;
@@ -59,20 +60,22 @@ public class ProductServiceImpl implements IProductService {
 		return productDTO;
 	}
 
-//
-//	@Override
-//	public ProductDTO convertFromCartItemToProductDTO(CartItemDTO cartItemDTO) {
-//		ProductDTO productDTO = modelMapper.map(cartItemDTO.getCartProduct(), ProductDTO.class);
-//		return productDTO;
-//	}
-//
+	@Override
+	public ProductOrderDTO convertToProductOrderDTO(Product product) {
+		ProductOrderDTO productOrderDTO = modelMapper.map(product, ProductOrderDTO.class);
+		productOrderDTO.setIsOutOfStock(product.getQuantity() < 1);
+		productOrderDTO.setIsExpired(ParseUtils.checkIsExpired(product.getExpiredDate()));
+		UserDTO userDTO = userClient.getStoreById(product.getCreatorId());
+		productOrderDTO.setCreator(userDTO);
+		return productOrderDTO;
+	}
+
 	@Override
 	public List<ProductDTO> getAllProducts() {
 		List<Product> products = productRepository.findAll();
 		return products.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
-//
 	@Override
 	public ProductDTO getProductById(int id) {
 		Optional<Product> optionalProduct = productRepository.findById(id);
@@ -83,6 +86,19 @@ public class ProductServiceImpl implements IProductService {
 			ProductDTO productDTO = convertToDto(product);
 			setCreatorToProduct(productDTO, product.getCreatorId());
 			return productDTO;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public ProductOrderDTO getProductOrderById(int id) {
+		Optional<Product> optionalProduct = productRepository.findById(id);
+		Product product = null;
+		if (optionalProduct.isPresent()) {
+			product = optionalProduct.get();
+
+			return convertToProductOrderDTO(product);
 		} else {
 			return null;
 		}
@@ -138,18 +154,20 @@ public class ProductServiceImpl implements IProductService {
 			return null;
 		}
 	}
-//
-
-//
-//	@Override
-//	public List<Product> testGetAll() {
-//		return productRepository.testGetAll();
-//	}
 
 	@Override
 	public void setCreatorToProduct(ProductDTO productDTO, int userId) {
 		UserDTO userDTO = userClient.getStoreById(userId);
 		productDTO.setCreator(userDTO);
+	}
+
+	@Override
+	public void updateProduct(Integer id, int quantity, int soldCount) {
+		Product product = productRepository.findById(id).get();
+		product.setQuantity(quantity);
+		product.setSoldCount(soldCount);
+		productRepository.save(product);
+
 	}
 
 }

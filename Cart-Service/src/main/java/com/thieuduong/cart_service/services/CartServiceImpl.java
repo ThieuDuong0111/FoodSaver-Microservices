@@ -4,26 +4,29 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.funix.foodsaverAPI.models.MyUser;
-import com.funix.foodsaverAPI.models.Order;
-import com.funix.foodsaverAPI.models.OrderDetail;
-import com.funix.foodsaverAPI.models.Product;
 import com.thieuduong.cart_service.models.Cart;
 import com.thieuduong.cart_service.models.CartItem;
 import com.thieuduong.cart_service.repositories.ICartItemRepository;
 import com.thieuduong.cart_service.repositories.ICartRepository;
 import com.thieuduong.commons.dto.CartDTO;
 import com.thieuduong.commons.dto.CartItemDTO;
+import com.thieuduong.commons.dto.CartItemOrderDTO;
 import com.thieuduong.commons.dto.CartItemProductDTO;
+import com.thieuduong.commons.dto.CompleteOrderDTO;
 import com.thieuduong.commons.dto.OrderDTO;
 import com.thieuduong.commons.dto.ProductDTO;
+import com.thieuduong.commons.dto.ProductOrderDTO;
 import com.thieuduong.commons.utils.ParseUtils;
+//import com.thieuduong.commons.clients.IOrderClient;
 import com.thieuduong.commons.clients.IProductClient;
 import com.thieuduong.commons.clients.IUserClient;
 import com.thieuduong.commons.dto.CartByCreatorDTO;
@@ -47,22 +50,10 @@ public class CartServiceImpl implements ICartService {
 	private IProductClient productClient;
 
 //	@Autowired
-//	private IOrderRepository orderRepository;
-//
-//	@Autowired
-//	private IOrderDetailRepository orderDetailRepository;
-//
-//	@Autowired
-//	private ProductServiceImpl productServiceImpl;
-//
-//	@Autowired
-//	private OrderServiceImpl orderServiceImpl;
-//
-//	@Autowired
-//	private IUserService userService;
+//	private IOrderClient orderClient;
 
-//	@Autowired
-//	private ModelMapper modelMapper;
+	@Autowired
+	private KafkaTemplate<String, CompleteOrderDTO> kafkaTemplate;
 
 	@Override
 	public Mono<CartDTO> convertToDto(Cart cart) {
@@ -84,11 +75,6 @@ public class CartServiceImpl implements ICartService {
 		return cartItemDTO;
 	}
 
-//	@Override
-//	public OrderDetail convertToOrderDetail(CartItem cartItem) {
-//		return modelMapper.map(cartItem, OrderDetail.class);
-//	}
-//
 	@Override
 	public Mono<CartDTO> getItems(Integer userId) {
 		return cartRepository.getItemsByUserId(userId) // Mono<Cart>
@@ -207,75 +193,78 @@ public class CartServiceImpl implements ICartService {
 				}));
 	}
 
+	@Transactional
 	@Override
-	public Flux<OrderDTO> completeOrder(Integer userId, OrderDTO orderDTO) throws ParseException {
-		return cartRepository.getItemsByUserId(userId).flatMapMany(
-				cart -> cartItemRepository.findAllByCartId(cart.getId()).collectList().flatMapMany(cartItems -> {
-					if (cartItems.isEmpty()) {
-						return Flux.error(new IllegalArgumentException("Giỏ hàng trống."));
-					}
+	public Flux<OrderDTO> completeOrder(Integer userId, OrderDTO orderDTO) {
+		return cartRepository.getItemsByUserId(userId)
+				.switchIfEmpty(Mono.error(new IllegalArgumentException("Không tìm thấy giỏ hàng")))
+				.flatMapMany(cart -> cartItemRepository.findAllByCartId(cart.getId()).collectList()
+						.flatMapMany(cartItems -> {
+							if (cartItems.isEmpty()) {
+								return Flux.error(new IllegalArgumentException("Giỏ hàng trống."));
+							}
 
-					// Kiểm tra số lượng tồn kho cho từng sản phẩm
-					return Flux.fromIterable(cartItems).flatMap(cartItem -> Mono.just(cartItem)
-							.zipWith(Mono.fromCallable(() -> productClient.getProductDetail(cartItem.getProductId())))
-							.flatMap(tuple -> {
-								CartItem item = tuple.getT1();
-								ProductDTO product = tuple.getT2();
-								if (item.getUnitQuantity() > product.getQuantity()) {
-									return Mono.error(new IllegalArgumentException(
-											"Sản phẩm không đủ số lượng: " + product.getName()));
-								}
-								return Mono.just(item);
-							})).collectList().flatMapMany(validatedItems -> {
-								// Cập nhật tồn kho và sold count
-								for (CartItem item : validatedItems) {
-									ProductDTO product = productClient.getProductDetail(item.getProductId());
-									product.setQuantity(product.getQuantity() - item.getUnitQuantity());
-									product.setSoldCount(product.getSoldCount() + item.getUnitQuantity());
-//									productClient.updateProduct(product); // Giả định có method cập nhật product
-								}
+							// Kiểm tra số lượng tồn kho cho từng sản phẩm
+							return Flux.fromIterable(cartItems)
+									.flatMap(cartItem -> Mono.just(cartItem)
+											.zipWith(Mono.fromCallable(
+													() -> productClient.getProductDetail(cartItem.getProductId())))
+											.flatMap(tuple -> {
+												CartItem item = tuple.getT1();
+												ProductDTO product = tuple.getT2();
+												if (item.getUnitQuantity() > product.getQuantity()) {
+													return Mono.error(new IllegalArgumentException(
+															"Sản phẩm không đủ số lượng: " + product.getName()));
+												}
+												return Mono.just(item);
+											}))
+									.collectList().flatMapMany(validatedItems -> {
+										// Cập nhật tồn kho và sold count
+										for (CartItem item : validatedItems) {
+											ProductDTO productDTO = productClient.getProductDetail(item.getProductId());
+											productDTO.setQuantity(productDTO.getQuantity() - item.getUnitQuantity());
+											productDTO.setSoldCount(productDTO.getSoldCount() + item.getUnitQuantity());
+											productClient.updateProductAfterCompleteOrder(productDTO.getId(),
+													productDTO.getQuantity(), productDTO.getSoldCount());
+										}
+										// Tách danh sách creatorId duy nhất từ validatedItems
+										Set<Integer> creatorIds = validatedItems
+												.stream().map(item -> productClient
+														.getProductDetail(item.getProductId()).getCreator().getId())
+												.collect(Collectors.toSet());
 
-								// Lấy danh sách creatorId duy nhất
-//								List<Integer> creatorIds = cartRepository.getDistinctCreatorId(cart.getId());
+										// Tạo CompleteOrderDTO
+										List<CartItemOrderDTO> validatedItemDTOs = validatedItems.stream().map(item -> {
+											ProductOrderDTO product = productClient
+													.getProductOrderDetail(item.getProductId());
 
-								// Tách đơn theo creator (comment toàn bộ phần tạo Order và OrderDetail)
-								/*
-								 * return Flux.fromIterable(creatorIds) .flatMap(creatorId -> { Order order =
-								 * new Order( cart.getUserCarts(), new Date(), ParseUtils.generateOrderCode(),
-								 * false, creatorId, userService.getUserById(creatorId).getStoreName(), 0, 0 );
-								 * 
-								 * order.setPaymentType(orderDTO.getPaymentType());
-								 * order.setShippingType(orderDTO.getShippingType());
-								 * 
-								 * List<OrderDetail> orderDetails = new ArrayList<>(); for (CartItem item :
-								 * validatedItems) { ProductDTO product =
-								 * productClient.getProductDetail(item.getProductId()); if
-								 * (product.getCreator().getId().equals(creatorId)) { orderDetails.add(new
-								 * OrderDetail(order, product.getId(), product.getName(), product.getImageUrl(),
-								 * product.getImageType(), product.getImage(), item.getUnitQuantity(),
-								 * item.getUnitPrice())); } }
-								 * 
-								 * order.setOrderDetails(orderDetails);
-								 * order.setTotalAmount(calculateTotalAmountOfOrder(order));
-								 * 
-								 * return orderRepository.save(order) .flatMap(savedOrder -> { // return
-								 * orderDetailRepository.saveAll(orderDetails).then( //
-								 * Mono.just(orderServiceImpl.convertToDto(savedOrder)) // ); return
-								 * Mono.just(new OrderDTO(savedOrder.getId(), savedOrder.getOrderCode())); });
-								 * }) .collectList() .flatMapMany(orderDTOList -> { cart.setIsDone(true); return
-								 * cartRepository.save(cart) .then(cartRepository.save(new
-								 * Cart(cart.getUserCarts(), new Date(), new byte[]{0})))
-								 * .thenMany(Flux.fromIterable(orderDTOList)); });
-								 */
+											CartItemOrderDTO cartItemDTO = new CartItemOrderDTO();
+											cartItemDTO.setCartProduct(product);
+											cartItemDTO.setUnitQuantity(item.getUnitQuantity());
+											cartItemDTO.setUnitPrice(item.getUnitPrice());
+											return cartItemDTO;
+										}).collect(Collectors.toList());
 
-								// Nếu chưa xử lý đơn hàng, chỉ cập nhật trạng thái cart và trả về rỗng
-								cart.setIsDone(new byte[] { 1 });
-								return cartRepository.save(cart)
-										.then(cartRepository
-												.save(new Cart(userId, LocalDateTime.now(), new byte[] { 0 })))
-										.thenMany(Flux.empty());
-							});
-				}));
+										// Gọi sang order-service
+										CompleteOrderDTO completeOrderDTO = new CompleteOrderDTO();
+										completeOrderDTO.setUserId(userId);
+										completeOrderDTO.setValidatedItems(validatedItemDTOs);
+										completeOrderDTO.setCreatorIds(new ArrayList<>(creatorIds));
+										completeOrderDTO.setOrderDTO(orderDTO);
+										// Gọi sang order-service qua kafka
+										kafkaTemplate.send("complete-order-topic", completeOrderDTO);
+										// Gọi sang order-service qua Feign client
+//										List<OrderDTO> orderDTOList = orderClient.completeOrder(completeOrderDTO);
+										List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+
+										// Nếu chưa xử lý đơn hàng, chỉ cập nhật trạng thái cart và trả về rỗng
+										cart.setIsDone(new byte[] { 1 });
+										return cartRepository.save(cart)
+												.then(cartRepository
+														.save(new Cart(userId, LocalDateTime.now(), new byte[] { 0 })))
+												.thenMany(Flux.fromIterable(orderDTOList));
+									});
+						}));
 	}
 
 	@Override
